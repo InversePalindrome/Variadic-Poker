@@ -39,7 +39,7 @@ Card Deck::dealCard()
 {
 	Card card = this->deck.back();
 	this->removeCard();
-	return this->deck.back();
+	return card;
 }
 
 void Deck::setDeck(const std::vector<Card>& deck)
@@ -49,8 +49,7 @@ void Deck::setDeck(const std::vector<Card>& deck)
 
 void Deck::shuffle() 
 {
-	auto engine = std::default_random_engine{};
-	std::shuffle(this->deck.begin(), this->deck.end(), engine);
+	std::shuffle(this->deck.begin(), this->deck.end(), std::default_random_engine{});
 }
 
 void Deck::removeCard() 

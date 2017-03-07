@@ -104,7 +104,7 @@ std::string Card::toString() const
 
 bool Card::operator==(const Card& otherCard) const
 {
-	return this->rank == otherCard.rank;
+	return this->rank == otherCard.rank && this->suit == otherCard.suit;
 }
 
 bool Card::operator!=(const Card& otherCard) const
@@ -121,3 +121,4 @@ bool Card::operator>(const Card& otherCard) const
 {
 	return !(*this < otherCard);
 }
+

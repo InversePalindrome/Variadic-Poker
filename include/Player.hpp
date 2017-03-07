@@ -16,7 +16,7 @@ class Player
 {
 public:
 	Player(const std::string& name, double stack);
-	Player(const std::string & name);
+	Player(const std::string& name);
 
 	std::string getName() const;
 	double getStack() const;

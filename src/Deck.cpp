@@ -37,7 +37,7 @@ std::size_t Deck::getSize() const
 
 Card Deck::dealCard() 
 {
-	Card card = this->deck.back();
+	Card card(this->deck.back());
 	this->removeCard();
 	return card;
 }
@@ -66,3 +66,5 @@ void Deck::addCard(const Card& card)
 {
 	this->deck.push_back(card);
 }
+
+

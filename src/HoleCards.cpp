@@ -51,7 +51,7 @@ bool HoleCards::hasCards() const
 std::string HoleCards::toString() const
 {
 	std::string holeCardRepresentation = "| ";
-	for (Card card: this->holeCards)
+	for (const Card& card: this->holeCards)
 	{
 		holeCardRepresentation += card.toString() + " | ";
 	}

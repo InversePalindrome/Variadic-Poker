@@ -15,6 +15,7 @@ public:
 	enum Suit { Spade, Club, Diamond, Heart };
 	enum Rank { Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace };
 
+	Card();
 	Card(Suit suit, Rank rank);
 
 	Suit getSuit() const;
@@ -34,4 +35,3 @@ private:
 	Suit suit;
 	Rank rank;
 };
-

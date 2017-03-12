@@ -21,7 +21,7 @@ public:
 	std::vector<Card> getCards() const;
 
 	void setCards(const std::vector<Card>& holeCards);
-	
+
 	void addCard(const Card& card);
 	void removeCard(const Card& card);
 	void removeCards();
@@ -33,3 +33,4 @@ public:
 private:
 	std::vector<Card> holeCards;
 };
+

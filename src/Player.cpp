@@ -8,17 +8,19 @@ InversePalindrome.com
 #include "Player.hpp"
 
 
-Player::Player(const std::string& name, double stack) :
+Player::Player(const std::string& name, std::size_t stack) :
 	name(name),
 	stack(stack),
-	holeCards()
+	holeCards(),
+	playingStatus(true)
 {
 }
 
 Player::Player(const std::string& name) :
 	name(name),
 	stack(1000),
-	holeCards()
+	holeCards(),
+	playingStatus(true)
 {
 }
 
@@ -27,12 +29,12 @@ std::string Player::getName() const
 	return this->name;
 }
 
-double Player::getStack() const
+std::size_t Player::getStack() const
 {
 	return this->stack;
 }
 
-HoleCards Player::getHoleCards() const 
+HoleCards Player::getHoleCards() const
 {
 	return this->holeCards;
 }
@@ -42,9 +44,9 @@ void Player::setName(const std::string& name)
 	this->name = name;
 }
 
-void Player::setStack(double stack)
+void Player::setStack(std::size_t stack)
 {
-	this->stack = fabs(stack);
+	this->stack = stack;
 }
 
 void Player::setHoleCards(const HoleCards& holeCards)
@@ -52,24 +54,55 @@ void Player::setHoleCards(const HoleCards& holeCards)
 	this->holeCards = holeCards;
 }
 
-void Player::addToStack(double chips)
+void Player::setPlayingStatus(bool playingStatus)
 {
-	this->stack += fabs(chips);
+	this->playingStatus = playingStatus;
 }
 
-void Player::removeFromStack(double chips)
+void Player::addToStack(std::size_t chips)
 {
-	if (fabs(chips) > this->stack)
+	this->stack += chips;
+}
+
+void Player::removeFromStack(std::size_t chips)
+{
+	if (chips > this->stack)
 	{
 		throw std::invalid_argument("The amount to be removed can't be more than the stack!");
 	}
 	else
 	{
-		this->stack -= fabs(chips);
+		this->stack -= chips;
 	}
+}
+
+void Player::removeAllStack()
+{
+	this->stack = 0;
+}
+
+void Player::removeHoleCards()
+{
+	this->holeCards.removeCards();
+}
+
+bool Player::isPlaying() const
+{
+	return this->playingStatus;
 }
 
 std::string Player::toString() const
 {
-	return this->name + " | " + std::to_string(this->stack) + " chips " + this->holeCards.toString();
+	return "| " + this->name + " | " + std::to_string(this->stack) + " chips " + this->holeCards.toString();
 }
+
+bool Player::operator==(const Player& otherPlayer) const
+{
+	return this->name == otherPlayer.name;
+}
+
+bool Player::operator!=(const Player& otherPlayer) const
+{
+	return !(*this == otherPlayer);
+}
+

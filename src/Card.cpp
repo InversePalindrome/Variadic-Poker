@@ -8,6 +8,12 @@ InversePalindrome.com
 #include "Card.hpp"
 
 
+Card::Card() :
+	suit(),
+	rank()
+{
+}
+
 Card::Card(Suit suit, Rank rank) :
 	suit(suit),
 	rank(rank)
@@ -78,7 +84,7 @@ std::string Card::toString() const
 		break;
 	case Ace:
 		cardRank = "Ace";
-		 break;
+		break;
 	}
 
 	std::string cardSuit;

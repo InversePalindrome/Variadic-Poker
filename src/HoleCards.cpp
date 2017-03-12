@@ -45,16 +45,17 @@ void HoleCards::removeCards()
 
 bool HoleCards::hasCards() const
 {
-	return this->holeCards.empty();
+	return !this->holeCards.empty();
 }
 
 std::string HoleCards::toString() const
 {
 	std::string holeCardRepresentation = "| ";
-	for (const Card& card: this->holeCards)
+	for (const auto& card : this->holeCards)
 	{
 		holeCardRepresentation += card.toString() + " | ";
 	}
 
 	return holeCardRepresentation;
 }
+

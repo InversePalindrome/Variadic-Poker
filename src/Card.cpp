@@ -9,8 +9,8 @@ InversePalindrome.com
 
 
 Card::Card() :
-	suit(),
-	rank()
+	suit(Suit::UndefinedSuit),
+	rank(Rank::UndefinedRank)
 {
 }
 
@@ -127,4 +127,3 @@ bool Card::operator>(const Card& otherCard) const
 {
 	return !(*this < otherCard);
 }
-

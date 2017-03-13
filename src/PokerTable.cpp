@@ -85,7 +85,7 @@ void PokerTable::addChipsFromPlayer(const Player& player, std::size_t chips)
 	this->players.at(findPlayer(player)).addToStack(chips);
 }
 
-void PokerTable::removeChipsFromPlayer(const Player& player, std::size_t chips) 
+void PokerTable::removeChipsFromPlayer(const Player& player, std::size_t chips)
 {
 	this->players.at(findPlayer(player)).removeFromStack(chips);
 }

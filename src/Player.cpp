@@ -12,7 +12,7 @@ Player::Player(const std::string& name, std::size_t stack) :
 	name(name),
 	stack(stack),
 	holeCards(),
-	playingStatus(true)
+	action(PlayerAction::Action::UndefinedAction)
 {
 }
 
@@ -20,7 +20,7 @@ Player::Player(const std::string& name) :
 	name(name),
 	stack(1000),
 	holeCards(),
-	playingStatus(true)
+	action(PlayerAction::Action::UndefinedAction)
 {
 }
 
@@ -34,9 +34,14 @@ std::size_t Player::getStack() const
 	return this->stack;
 }
 
-HoleCards Player::getHoleCards() const
+CardContainer Player::getHoleCards() const
 {
 	return this->holeCards;
+}
+
+PlayerAction Player::getAction() const
+{
+	return this->action;
 }
 
 void Player::setName(const std::string& name)
@@ -49,14 +54,14 @@ void Player::setStack(std::size_t stack)
 	this->stack = stack;
 }
 
-void Player::setHoleCards(const HoleCards& holeCards)
+void Player::setHoleCards(const CardContainer& holeCards)
 {
 	this->holeCards = holeCards;
 }
 
-void Player::setPlayingStatus(bool playingStatus)
+void Player::setAction(PlayerAction action)
 {
-	this->playingStatus = playingStatus;
+	this->action = action;
 }
 
 void Player::addToStack(std::size_t chips)
@@ -83,12 +88,12 @@ void Player::removeAllStack()
 
 void Player::removeHoleCards()
 {
-	this->holeCards.removeCards();
+	this->holeCards.clearCards();
 }
 
-bool Player::isPlaying() const
+bool Player::hasFolded() const
 {
-	return this->playingStatus;
+	return this->action.getAction() == PlayerAction::Action::Fold;
 }
 
 std::string Player::toString() const
@@ -105,4 +110,3 @@ bool Player::operator!=(const Player& otherPlayer) const
 {
 	return !(*this == otherPlayer);
 }
-

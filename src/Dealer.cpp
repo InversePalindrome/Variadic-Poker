@@ -11,7 +11,7 @@ InversePalindrome.com
 Dealer::Dealer(const PokerTable& pokerTable) :
 	pokerTable(pokerTable),
 	deck(),
-	board(),
+	communityCards(),
 	muckedCards()
 {
 }
@@ -19,7 +19,7 @@ Dealer::Dealer(const PokerTable& pokerTable) :
 Dealer::Dealer(const PokerTable& pokerTable, const Deck& deck) :
 	pokerTable(pokerTable),
 	deck(deck),
-	board(),
+	communityCards(),
 	muckedCards()
 {
 }
@@ -34,12 +34,12 @@ Deck Dealer::getDeck() const
 	return this->deck;
 }
 
-std::vector<Card> Dealer::getBoard() const
+CardContainer Dealer::getCommunityCards() const
 {
-	return this->board;
+	return this->communityCards;
 }
 
-std::vector<Card> Dealer::getMuckedCards() const
+CardContainer Dealer::getMuckedCards() const
 {
 	return this->muckedCards;
 }
@@ -54,83 +54,67 @@ void Dealer::setDeck(const Deck& deck)
 	this->deck = deck;
 }
 
-
-void Dealer::dealPreFlop(std::size_t cardsPerPlayer) 
+void Dealer::postBlinds()
 {
-	this->deck.shuffle();
-
-	for (Player& player : this->pokerTable.players)
-	{
-		player.setHoleCards(HoleCards(this->deck.getCards(cardsPerPlayer)));
-		this->deck.removeCards(cardsPerPlayer);
-	}
-
 	this->transferChipsFromPlayerToPot(0, this->pokerTable.bigBlind / 2);
 	this->transferChipsFromPlayerToPot(1, this->pokerTable.bigBlind);
 }
 
+void Dealer::dealPreFlop(std::size_t cardsPerPlayer)
+{
+	this->deck.shuffle();
+
+	for (auto& player : this->pokerTable.players)
+	{
+		player.setHoleCards(CardContainer(this->deck.getCards(cardsPerPlayer)));
+		this->deck.removeCards(cardsPerPlayer);
+	}
+}
+
 void Dealer::dealFlop()
 {
-	const auto& flop = this->deck.getCards(3);
-	this->board.insert(this->board.begin(), flop.begin(), flop.end());
+	this->communityCards.addCards(this->deck.getCards(3));
 	this->deck.removeCards(3);
 }
 
 void Dealer::dealTurn()
 {
-	const auto& turn = this->deck.getCard();
-	this->board.push_back(turn);
+	this->communityCards.addCard(this->deck.getCard());
 	this->deck.removeCards(1);
 }
 
 void Dealer::dealRiver()
 {
-	const auto& river = this->deck.getCard();
-	this->board.push_back(river);
+	this->communityCards.addCard(this->deck.getCard());
 	this->deck.removeCards(1);
 }
 
 void Dealer::endHand()
 {
-	this->deck.addCards(this->board);
-	this->deck.addCards(this->muckedCards);
-	this->board.clear();
-    this->muckedCards.clear();
+	this->deck.addCards(this->communityCards.getCards());
+	this->deck.addCards(this->muckedCards.getCards());
+	this->communityCards.clearCards();
+	this->muckedCards.clearCards();
 
-	for (const Player& player : this->pokerTable.players)
-	{
-		if (player.getStack() < pokerTable.getBigBlind())
-		{
-			this->pokerTable.removePlayer(player);
-		}
-	}
+	this->pokerTable.players.erase(std::remove_if(this->pokerTable.players.begin(), this->pokerTable.players.end(), 
+		[](const Player& player) {return player.getStack() == 0; }), this->pokerTable.players.end());
 }
 
 void Dealer::transferChipsFromPlayerToPot(std::size_t playerPosition, std::size_t chips)
 {
 	if (playerPosition >= 0 && playerPosition < this->pokerTable.getSize())
 	{
-		if (!this->pokerTable.players.at(playerPosition).getStack() < chips)
+		if (this->pokerTable.players.at(playerPosition).getStack() > chips)
 		{
 			this->pokerTable.players.at(playerPosition).removeFromStack(chips);
 			this->pokerTable.addToPot(chips);
 		}
 		else
 		{
-			this->pokerTable.players.at(playerPosition).setPlayingStatus(false);
+			this->pokerTable.addToPot(this->pokerTable.players.at(playerPosition).getStack());
+			this->pokerTable.players.at(playerPosition).removeAllStack();
 		}
 	}
 }
 
-std::string Dealer::boardToString() const
-{
-	std::string boardRepresentation = "| ";
-
-	for (const auto& card : this->board)
-	{
-		boardRepresentation += card.toString() + " | ";
-	}
-
-	return boardRepresentation;
-}
 

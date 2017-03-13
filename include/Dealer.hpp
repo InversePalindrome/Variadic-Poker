@@ -12,7 +12,7 @@ InversePalindrome.com
 #include "Deck.hpp"
 #include "Card.hpp"
 #include "PokerTable.hpp"
-#include "HoleCards.hpp"
+#include "CardContainer.hpp"
 
 
 class Dealer
@@ -23,12 +23,13 @@ public:
 
 	PokerTable getPokerTable() const;
 	Deck getDeck() const;
-	std::vector<Card> getBoard() const;
-	std::vector<Card> getMuckedCards() const;
+	CardContainer getCommunityCards() const;
+	CardContainer getMuckedCards() const;
 
 	void setPokerTable(const PokerTable& pokerTable);
 	void setDeck(const Deck& deck);
 
+	void postBlinds();
 	void dealPreFlop(std::size_t cardsPerPlayer);
 	void dealFlop();
 	void dealTurn();
@@ -37,11 +38,9 @@ public:
 
 	void transferChipsFromPlayerToPot(std::size_t playerPosition, std::size_t chips);
 
-	std::string boardToString() const;
-
 private:
 	PokerTable pokerTable;
 	Deck deck;
-	std::vector<Card> board;
-	std::vector<Card> muckedCards;
+	CardContainer communityCards;
+	CardContainer muckedCards;
 };

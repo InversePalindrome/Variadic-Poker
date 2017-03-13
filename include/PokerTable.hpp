@@ -16,7 +16,7 @@ class PokerTable
 
 public:
 	PokerTable(const std::vector<Player>& players, std::size_t bigBlind);
-	
+
 	std::vector<Player> getPlayers() const;
 	std::size_t getBigBlind() const;
 	std::size_t getPot() const;
@@ -25,7 +25,7 @@ public:
 	void setPlayers(const std::vector<Player>& players);
 	void setBigBlind(std::size_t chips);
 	void setPot(std::size_t chips);
-	
+
 	void addPlayer(const Player& player);
 	void removePlayer(const Player& player);
 	void removePlayers();

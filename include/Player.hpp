@@ -9,7 +9,8 @@ InversePalindrome.com
 #include <string>
 #include <cmath>
 #include <stdexcept>
-#include "HoleCards.hpp"
+#include "CardContainer.hpp"
+#include "PlayerAction.hpp"
 
 
 class Player
@@ -20,19 +21,20 @@ public:
 
 	std::string getName() const;
 	std::size_t getStack() const;
-	HoleCards getHoleCards() const;
+	CardContainer getHoleCards() const;
+	PlayerAction getAction() const;
 
 	void setName(const std::string& name);
 	void setStack(std::size_t stack);
-	void setHoleCards(const HoleCards& holeCards);
-	void setPlayingStatus(bool playingStatus);
+	void setHoleCards(const CardContainer& holeCards);
+	void setAction(PlayerAction action);
 
 	void addToStack(std::size_t chips);
 	void removeFromStack(std::size_t chips);
 	void removeAllStack();
 	void removeHoleCards();
 
-	bool isPlaying() const;
+	bool hasFolded() const;
 
 	std::string toString() const;
 
@@ -42,7 +44,6 @@ public:
 private:
 	std::string name;
 	std::size_t stack;
-	HoleCards holeCards;
-	bool playingStatus;
+	CardContainer holeCards;
+	PlayerAction action;
 };
-

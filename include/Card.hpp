@@ -12,8 +12,8 @@ InversePalindrome.com
 class Card
 {
 public:
-	enum Suit { Spade, Club, Diamond, Heart };
-	enum Rank { Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace };
+	enum Suit { UndefinedSuit, Spade, Club, Diamond, Heart };
+	enum Rank { UndefinedRank, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace };
 
 	Card();
 	Card(Suit suit, Rank rank);

@@ -28,6 +28,7 @@ public:
 	void removeCard(const Card& card);
 
 	void clearCards();
+	void sort();
 
 	bool hasCards() const;
 

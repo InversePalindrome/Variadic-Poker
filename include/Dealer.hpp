@@ -8,11 +8,13 @@ InversePalindrome.com
 #pragma once
 #include <vector>
 #include <string>
+#include <algorithm>
 #include "Player.hpp"
 #include "Deck.hpp"
 #include "Card.hpp"
 #include "PokerTable.hpp"
 #include "CardContainer.hpp"
+#include "PokerHand.hpp"
 
 
 class Dealer
@@ -37,6 +39,8 @@ public:
 	void endHand();
 
 	void transferChipsFromPlayerToPot(std::size_t playerPosition, std::size_t chips);
+	void transferPotToWinner();
+	void transferCardsToDeck();
 
 private:
 	PokerTable pokerTable;

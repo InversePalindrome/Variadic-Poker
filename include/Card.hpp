@@ -15,6 +15,9 @@ public:
 	enum Suit { UndefinedSuit, Spade, Club, Diamond, Heart };
 	enum Rank { UndefinedRank, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace };
 
+	static const std::size_t SUIT_LENGTH = 4;
+	static const std::size_t RANK_LENGTH = 13;
+
 	Card();
 	Card(Suit suit, Rank rank);
 
@@ -30,6 +33,8 @@ public:
 	bool operator!=(const Card& otherCard) const;
 	bool operator<(const Card& otherCard) const;
 	bool operator>(const Card& otherCard) const;
+	bool operator<=(const Card& otherCard) const;
+	bool operator>=(const Card& otherCard) const;
 
 private:
 	Suit suit;

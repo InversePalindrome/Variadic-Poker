@@ -27,7 +27,7 @@ public:
 	void setName(const std::string& name);
 	void setStack(std::size_t stack);
 	void setHoleCards(const CardContainer& holeCards);
-	void setAction(PlayerAction action);
+	void setAction(const PlayerAction& action);
 
 	void addToStack(std::size_t chips);
 	void removeFromStack(std::size_t chips);

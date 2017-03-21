@@ -59,7 +59,7 @@ void Player::setHoleCards(const CardContainer& holeCards)
 	this->holeCards = holeCards;
 }
 
-void Player::setAction(PlayerAction action)
+void Player::setAction(const PlayerAction& action)
 {
 	this->action = action;
 }

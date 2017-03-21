@@ -85,6 +85,8 @@ std::string Card::toString() const
 	case Ace:
 		cardRank = "Ace";
 		break;
+	default:
+		cardRank = "Undefined Rank";
 	}
 
 	std::string cardSuit;
@@ -103,6 +105,8 @@ std::string Card::toString() const
 	case Heart:
 		cardSuit = "Hearts";
 		break;
+	default:
+		cardSuit = "Undefined Suit";
 	}
 
 	return cardRank + " of " + cardSuit;
@@ -124,6 +128,16 @@ bool Card::operator<(const Card& otherCard) const
 }
 
 bool Card::operator>(const Card& otherCard) const
+{
+	return otherCard < *this;
+}
+
+bool Card::operator<=(const Card& otherCard) const
+{
+	return !(*this > otherCard);
+}
+
+bool Card::operator>=(const Card& otherCard) const
 {
 	return !(*this < otherCard);
 }

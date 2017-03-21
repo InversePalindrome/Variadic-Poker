@@ -73,8 +73,8 @@ void Dealer::dealPreFlop(std::size_t cardsPerPlayer)
 
 void Dealer::dealFlop()
 {
-	this->communityCards.addCards(this->deck.getCards(3));
-	this->deck.removeCards(3);
+		this->communityCards.addCards(this->deck.getCards(3));
+		this->deck.removeCards(3);
 }
 
 void Dealer::dealTurn()
@@ -91,13 +91,11 @@ void Dealer::dealRiver()
 
 void Dealer::endHand()
 {
-	this->deck.addCards(this->communityCards.getCards());
-	this->deck.addCards(this->muckedCards.getCards());
-	this->communityCards.clearCards();
-	this->muckedCards.clearCards();
+	this->transferPotToWinner();
+	this->transferCardsToDeck();
 
-	this->pokerTable.players.erase(std::remove_if(this->pokerTable.players.begin(), this->pokerTable.players.end(), 
-		[](const Player& player) {return player.getStack() == 0; }), this->pokerTable.players.end());
+	this->pokerTable.players.erase(std::remove_if(this->pokerTable.players.begin(), this->pokerTable.players.end(),
+			[&](const Player& player) {return player.getStack() < this->pokerTable.getBigBlind(); }), this->pokerTable.players.end());
 }
 
 void Dealer::transferChipsFromPlayerToPot(std::size_t playerPosition, std::size_t chips)
@@ -117,4 +115,46 @@ void Dealer::transferChipsFromPlayerToPot(std::size_t playerPosition, std::size_
 	}
 }
 
+void Dealer::transferPotToWinner()
+{
+	std::vector<PokerHand> showdownHands;
 
+	for (auto& player : this->pokerTable.players)
+	{
+		if (!player.hasFolded())
+		{
+			showdownHands.push_back(PokerHand(player.getHoleCards().getCards(), this->communityCards.getCards()));
+		}
+	}
+
+	std::sort(showdownHands.rbegin(), showdownHands.rend());
+	std::size_t numOfWinners = std::count(showdownHands.begin(), showdownHands.end(), showdownHands.front());
+
+	for (auto& player : this->pokerTable.players)
+	{
+		if (!player.hasFolded() &&
+			PokerHand(player.getHoleCards().getCards(), this->communityCards.getCards()) == showdownHands.front())
+		{
+			player.addToStack(this->pokerTable.pot / numOfWinners);
+		}
+	}
+
+	this->pokerTable.clearPot();
+}
+
+void Dealer::transferCardsToDeck()
+{
+	for (auto& player : this->pokerTable.players)
+	{
+		if (!player.hasFolded())
+		{
+			this->deck.addCards(player.getHoleCards().getCards());
+			player.removeHoleCards();
+		}
+	}
+
+	this->deck.addCards(this->communityCards.getCards());
+	this->deck.addCards(this->muckedCards.getCards());
+	this->communityCards.clearCards();
+	this->muckedCards.clearCards();
+}

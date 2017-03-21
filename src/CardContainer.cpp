@@ -53,6 +53,11 @@ void CardContainer::clearCards()
 	this->cards.clear();
 }
 
+void CardContainer::sort()
+{
+	std::sort(this->cards.rbegin(), this->cards.rend()); 
+}
+
 bool CardContainer::hasCards() const
 {
 	return !this->cards.empty();

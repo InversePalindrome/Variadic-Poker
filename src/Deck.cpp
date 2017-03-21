@@ -1,4 +1,3 @@
-
 /*
 Copyright (c) 2017 InversePalindrome
 VariadicPoker - Deck.cpp
@@ -16,7 +15,7 @@ Deck::Deck() :
 	{
 		for (int rank = Card::Two; rank <= Card::Ace; rank++)
 		{
-			addCard(Card((Card::Suit)suit, (Card::Rank)rank));
+			addCard(Card(static_cast<Card::Suit>(suit), static_cast<Card::Rank>(rank)));
 		}
 	}
 }

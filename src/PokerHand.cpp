@@ -108,7 +108,7 @@ std::size_t PokerHand::findHighCard(std::size_t nthHighCard) const
 		{
 			return Card::RANK_LENGTH - std::distance(this->rankTotal.begin(), it);
 		}
-		else if (it == this->rankTotal.end())
+		else if (it == rankTotal.end())
 		{
 			break;
 		}
@@ -277,7 +277,7 @@ std::string PokerHand::toString() const
 			this->toString(this->findTwoPair()) + "s ";
 		break;
 	case ThreeOfAKind:
-		handRepresentation += "Three of a Kind " + this->toString(static_cast<Card::Rank>(this->kicker)) + "s ";
+		handRepresentation += "Three of a Kind " + this->toString(static_cast<Card::Rank>(this->findThreeOfAKind())) + "s ";
 		break;
 	case Straight:
 		handRepresentation += this->toString(static_cast<Card::Rank>(this->kicker)) + " High Straight ";

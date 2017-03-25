@@ -54,10 +54,9 @@ void Dealer::setDeck(const Deck& deck)
 	this->deck = deck;
 }
 
-void Dealer::postBlinds()
+void Dealer::startHand()
 {
-	this->transferChipsFromPlayerToPot(0, this->pokerTable.bigBlind / 2);
-	this->transferChipsFromPlayerToPot(1, this->pokerTable.bigBlind);
+	postBlinds();
 }
 
 void Dealer::dealPreFlop(std::size_t cardsPerPlayer)
@@ -73,8 +72,8 @@ void Dealer::dealPreFlop(std::size_t cardsPerPlayer)
 
 void Dealer::dealFlop()
 {
-		this->communityCards.addCards(this->deck.getCards(3));
-		this->deck.removeCards(3);
+	this->communityCards.addCards(this->deck.getCards(3));
+	this->deck.removeCards(3);
 }
 
 void Dealer::dealTurn()
@@ -93,6 +92,7 @@ void Dealer::endHand()
 {
 	this->transferPotToWinner();
 	this->transferCardsToDeck();
+	this->pokerTable.clearPot();
 
 	this->pokerTable.players.erase(std::remove_if(this->pokerTable.players.begin(), this->pokerTable.players.end(),
 			[&](const Player& player) {return player.getStack() < this->pokerTable.getBigBlind(); }), this->pokerTable.players.end());
@@ -102,59 +102,113 @@ void Dealer::transferChipsFromPlayerToPot(std::size_t playerPosition, std::size_
 {
 	if (playerPosition >= 0 && playerPosition < this->pokerTable.getSize())
 	{
-		if (this->pokerTable.players.at(playerPosition).getStack() > chips)
-		{
-			this->pokerTable.players.at(playerPosition).removeFromStack(chips);
-			this->pokerTable.addToPot(chips);
-		}
-		else
-		{
-			this->pokerTable.addToPot(this->pokerTable.players.at(playerPosition).getStack());
-			this->pokerTable.players.at(playerPosition).removeAllStack();
-		}
+		this->pokerTable.players.at(playerPosition).removeFromStack(chips);
+		this->pokerTable.players.at(playerPosition).addToPotContribution(chips);
+		this->pokerTable.addToPot(chips);
 	}
 }
 
 void Dealer::transferPotToWinner()
 {
-	std::vector<PokerHand> showdownHands;
+	std::size_t numOfPlayersContributions = std::count_if(this->pokerTable.players.begin(), this->pokerTable.players.end(),
+		[&](const Player& player) { return player.getPotContribution() > 0;  });
+
+	while (numOfPlayersContributions > 0)
+	{
+		for (auto& player : this->pokerTable.players)
+		{
+			if (player.getPotContribution() == 0)
+			{
+				this->muckHoleCards(player);
+				player.setAction(PlayerAction::Fold);
+			}
+		}
+
+		std::size_t minContribution = this->minContribution();
+
+		for (auto& player : this->pokerTable.players)
+		{
+			player.removeFromPotContribution(minContribution);
+		}
+
+		std::size_t sidePot = minContribution * numOfPlayersContributions;
+
+		const auto& showdownHands = this->rankedPokerHands();
+		std::size_t numOfWinners = std::count_if(this->pokerTable.players.begin(), this->pokerTable.players.end(),
+			[&](const Player& player) { return PokerHand(player.getHoleCards().getCards(), this->communityCards.getCards()) == showdownHands.back(); });
+
+		for (auto& player : this->pokerTable.players)
+		{
+			if (player.isActive() && PokerHand(player.getHoleCards().getCards(), this->communityCards.getCards()) == showdownHands.back())
+			{
+				player.addToStack(sidePot / numOfWinners);
+			}
+		}
+
+		numOfPlayersContributions = std::count_if(this->pokerTable.players.begin(), this->pokerTable.players.end(),
+			[&](const Player& player) { return player.getPotContribution() > 0;  });
+	}
 
 	for (auto& player : this->pokerTable.players)
 	{
-		if (!player.hasFolded())
+		if (player.isActive())
+		{
+			this->muckHoleCards(player);
+			player.setAction(PlayerAction::Fold);
+		}
+	}
+}
+
+void Dealer::transferCardsToDeck()
+{
+	this->deck.addCards(this->communityCards.getCards());
+	this->deck.addCards(this->muckedCards.getCards());
+	this->communityCards.clearCards();
+	this->muckedCards.clearCards();
+}
+
+void Dealer::postBlinds()
+{
+	this->transferChipsFromPlayerToPot(0, this->pokerTable.bigBlind / 2);
+	this->transferChipsFromPlayerToPot(1, this->pokerTable.bigBlind);
+}
+
+void Dealer::muckHoleCards(Player& player)
+{
+	this->muckedCards.addCards(player.getHoleCards().getCards());
+	player.clearHoleCards();
+}
+
+std::size_t Dealer::minContribution() const
+{
+	std::size_t minContribution = this->pokerTable.pot;
+
+	for (const auto& player : this->pokerTable.players)
+	{
+		std::size_t contribution = player.getPotContribution();
+
+		if (contribution > 0 && contribution < minContribution)
+		{
+			minContribution = contribution;
+		}
+	}
+
+	return minContribution;
+}
+
+std::vector<PokerHand> Dealer::rankedPokerHands() const
+{
+	std::vector<PokerHand> showdownHands;
+
+	for (const auto& player : this->pokerTable.players)
+	{
+		if (player.isActive())
 		{
 			showdownHands.push_back(PokerHand(player.getHoleCards().getCards(), this->communityCards.getCards()));
 		}
 	}
 
-	std::sort(showdownHands.rbegin(), showdownHands.rend());
-	std::size_t numOfWinners = std::count(showdownHands.begin(), showdownHands.end(), showdownHands.front());
+	std::sort(showdownHands.begin(), showdownHands.end());
 
-	for (auto& player : this->pokerTable.players)
-	{
-		if (!player.hasFolded() &&
-			PokerHand(player.getHoleCards().getCards(), this->communityCards.getCards()) == showdownHands.front())
-		{
-			player.addToStack(this->pokerTable.pot / numOfWinners);
-		}
-	}
-
-	this->pokerTable.clearPot();
-}
-
-void Dealer::transferCardsToDeck()
-{
-	for (auto& player : this->pokerTable.players)
-	{
-		if (!player.hasFolded())
-		{
-			this->deck.addCards(player.getHoleCards().getCards());
-			player.removeHoleCards();
-		}
-	}
-
-	this->deck.addCards(this->communityCards.getCards());
-	this->deck.addCards(this->muckedCards.getCards());
-	this->communityCards.clearCards();
-	this->muckedCards.clearCards();
+	return showdownHands;
 }

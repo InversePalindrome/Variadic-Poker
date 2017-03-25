@@ -11,6 +11,7 @@ InversePalindrome.com
 Player::Player(const std::string& name, std::size_t stack) :
 	name(name),
 	stack(stack),
+	potContribution(0),
 	holeCards(),
 	action(PlayerAction::Action::UndefinedAction)
 {
@@ -19,6 +20,7 @@ Player::Player(const std::string& name, std::size_t stack) :
 Player::Player(const std::string& name) :
 	name(name),
 	stack(1000),
+	potContribution(0),
 	holeCards(),
 	action(PlayerAction::Action::UndefinedAction)
 {
@@ -32,6 +34,11 @@ std::string Player::getName() const
 std::size_t Player::getStack() const
 {
 	return this->stack;
+}
+
+std::size_t Player::getPotContribution() const
+{
+	return this->potContribution;
 }
 
 CardContainer Player::getHoleCards() const
@@ -54,6 +61,11 @@ void Player::setStack(std::size_t stack)
 	this->stack = stack;
 }
 
+void Player::setPotContribution(std::size_t potContribution)
+{
+	this->potContribution = potContribution;
+}
+
 void Player::setHoleCards(const CardContainer& holeCards)
 {
 	this->holeCards = holeCards;
@@ -69,31 +81,39 @@ void Player::addToStack(std::size_t chips)
 	this->stack += chips;
 }
 
-void Player::removeFromStack(std::size_t chips)
+void Player::addToPotContribution(std::size_t chips)
 {
-	if (chips > this->stack)
-	{
-		throw std::invalid_argument("The amount to be removed can't be more than the stack!");
-	}
-	else
-	{
-		this->stack -= chips;
-	}
+	chips > this->stack ? this->potContribution += this->stack : this->potContribution += chips;
 }
 
-void Player::removeAllStack()
+void Player::removeFromStack(std::size_t chips)
+{
+	chips > this->stack ? this->stack = 0 : this->stack -= chips;
+}
+
+void Player::removeFromPotContribution(std::size_t chips)
+{
+	chips > this->potContribution ? this->potContribution = 0 : this->potContribution -= chips;
+}
+
+void Player::clearStack()
 {
 	this->stack = 0;
 }
 
-void Player::removeHoleCards()
+void Player::clearPotContribution()
+{
+	this->potContribution = 0;
+}
+
+void Player::clearHoleCards()
 {
 	this->holeCards.clearCards();
 }
 
-bool Player::hasFolded() const
+bool Player::isActive() const
 {
-	return this->action.getAction() == PlayerAction::Action::Fold;
+	return this->action.getAction() !=  PlayerAction::Fold;
 }
 
 std::string Player::toString() const

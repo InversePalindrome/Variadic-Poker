@@ -22,6 +22,7 @@ public:
 	std::vector<Card> getCards(std::size_t numOfCards) const;
 	Card getCard() const;
 
-	void shuffle();
 	void removeCards(std::size_t numOfCards);
+
+	void shuffle();
 };

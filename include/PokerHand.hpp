@@ -51,7 +51,6 @@ public:
 private:
 	HandStrength handStrength;
 	std::size_t kicker;
-
 	std::array<std::size_t, 13> rankTotal;
 
 	void initializeRankTotal();

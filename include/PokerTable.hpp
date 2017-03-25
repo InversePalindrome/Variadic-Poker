@@ -27,14 +27,16 @@ public:
 	void setPot(std::size_t chips);
 
 	void addPlayer(const Player& player);
-	void removePlayer(const Player& player);
-	void removePlayers();
 	void addToPot(std::size_t chips);
+	void addChipsToPlayer(const Player& player, std::size_t chips);
+
+	void removePlayer(const Player& player);
+	void removeChipsFromPlayer(const Player& player, std::size_t chips);
+
+	void clearPlayers();
 	void clearPot();
 
 	std::size_t findPlayer(const Player& player) const;
-	void addChipsFromPlayer(const Player& player, std::size_t chips);
-	void removeChipsFromPlayer(const Player& player, std::size_t chips);
 
 	bool hasPlayers() const;
 

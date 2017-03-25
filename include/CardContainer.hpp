@@ -25,9 +25,11 @@ public:
 
 	void addCard(const Card& card);
 	void addCards(const std::vector<Card>& cards);
+
 	void removeCard(const Card& card);
 
 	void clearCards();
+
 	void sort();
 
 	bool hasCards() const;

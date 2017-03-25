@@ -31,20 +31,26 @@ public:
 	void setPokerTable(const PokerTable& pokerTable);
 	void setDeck(const Deck& deck);
 
-	void postBlinds();
+	void startHand();
 	void dealPreFlop(std::size_t cardsPerPlayer);
 	void dealFlop();
 	void dealTurn();
 	void dealRiver();
 	void endHand();
-
-	void transferChipsFromPlayerToPot(std::size_t playerPosition, std::size_t chips);
-	void transferPotToWinner();
-	void transferCardsToDeck();
-
+	
 private:
 	PokerTable pokerTable;
 	Deck deck;
 	CardContainer communityCards;
 	CardContainer muckedCards;
+
+	void transferChipsFromPlayerToPot(std::size_t playerPosition, std::size_t chips);
+	void transferPotToWinner();
+	void transferCardsToDeck();
+
+	void postBlinds();
+	void muckHoleCards(Player& player);
+
+	std::size_t minContribution() const;
+	std::vector<PokerHand> rankedPokerHands() const;
 };

@@ -11,7 +11,7 @@ InversePalindrome.com
 class PlayerAction
 {
 public:
-	enum Action {UndefinedAction, Fold, Check, Call, Bet, Raise, AllIn};
+	enum Action {UndefinedAction, Fold, Check, Call, Bet, Raise};
 
 	PlayerAction();
 	PlayerAction(Action action);

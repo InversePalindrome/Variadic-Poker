@@ -20,8 +20,8 @@ class PokerHand : public CardContainer
 public:
     enum HandStrength {UndefinedHand, HighCard, Pair, TwoPair, ThreeOfAKind, Straight, Flush, FullHouse, FourOfAKind, StraightFlush, RoyalFlush};
 
-	PokerHand(const std::vector<Card>& communityCards, const std::vector<Card>& holeCards);
 	PokerHand(const std::vector<Card>& cards);
+	PokerHand(const std::vector<Card>& communityCards, const std::vector<Card>& holeCards);
 
 	HandStrength getHandStrength() const;
 
@@ -38,7 +38,7 @@ public:
 	std::size_t findStraightFlush() const;
 	std::size_t findRoyalFlush() const;
 
-	virtual std::string toString() const;
+	virtual std::string toString() const override;
 	virtual std::string toString(std::size_t rank) const;
 
 	bool operator==(const PokerHand& otherHand) const;

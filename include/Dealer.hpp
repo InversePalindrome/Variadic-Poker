@@ -37,6 +37,8 @@ public:
 	void dealTurn();
 	void dealRiver();
 	void endHand();
+
+	void changePositions();
 	
 private:
 	PokerTable pokerTable;

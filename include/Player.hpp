@@ -16,8 +16,8 @@ InversePalindrome.com
 class Player
 {
 public:
-	Player(const std::string& name, std::size_t stack);
 	Player(const std::string& name);
+	Player(const std::string& name, std::size_t stack);
 
 	std::string getName() const;
 	std::size_t getStack() const;

@@ -15,6 +15,7 @@ class PokerTable
 	friend class Dealer;
 
 public:
+	PokerTable(const std::vector<Player>& players);
 	PokerTable(const std::vector<Player>& players, std::size_t bigBlind);
 
 	std::vector<Player> getPlayers() const;

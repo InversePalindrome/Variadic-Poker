@@ -8,6 +8,11 @@ InversePalindrome.com
 #include "PokerTable.hpp"
 
 
+PokerTable::PokerTable(const std::vector<Player>& players) :
+	PokerTable(players, 10)
+{
+}
+
 PokerTable::PokerTable(const std::vector<Player>& players, std::size_t bigBlind) :
 	players(players),
 	bigBlind(bigBlind),

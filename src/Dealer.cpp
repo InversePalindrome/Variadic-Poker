@@ -9,10 +9,7 @@ InversePalindrome.com
 
 
 Dealer::Dealer(const PokerTable& pokerTable) :
-	pokerTable(pokerTable),
-	deck(),
-	communityCards(),
-	muckedCards()
+	Dealer(pokerTable, Deck())
 {
 }
 
@@ -56,6 +53,11 @@ void Dealer::setDeck(const Deck& deck)
 
 void Dealer::startHand()
 {
+	for (auto& player : this->pokerTable.players)
+	{
+		player.setAction(PlayerAction::UndefinedAction);
+	}
+
 	postBlinds();
 }
 
@@ -96,6 +98,11 @@ void Dealer::endHand()
 
 	this->pokerTable.players.erase(std::remove_if(this->pokerTable.players.begin(), this->pokerTable.players.end(),
 			[&](const Player& player) {return player.getStack() < this->pokerTable.getBigBlind(); }), this->pokerTable.players.end());
+}
+
+void Dealer::changePositions()
+{
+	std::rotate(this->pokerTable.players.rbegin(), this->pokerTable.players.rbegin() + 1, this->pokerTable.players.rend());
 }
 
 void Dealer::transferChipsFromPlayerToPot(std::size_t playerPosition, std::size_t chips)

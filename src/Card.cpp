@@ -9,8 +9,7 @@ InversePalindrome.com
 
 
 Card::Card() :
-	suit(Suit::UndefinedSuit),
-	rank(Rank::UndefinedRank)
+	Card(Card::UndefinedSuit, Card::UndefinedRank)
 {
 }
 

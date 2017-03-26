@@ -8,18 +8,14 @@ InversePalindrome.com
 #include "Player.hpp"
 
 
-Player::Player(const std::string& name, std::size_t stack) :
-	name(name),
-	stack(stack),
-	potContribution(0),
-	holeCards(),
-	action(PlayerAction::Action::UndefinedAction)
+Player::Player(const std::string& name) :
+	Player(name, 1000)
 {
 }
 
-Player::Player(const std::string& name) :
+Player::Player(const std::string& name, std::size_t stack) :
 	name(name),
-	stack(1000),
+	stack(stack),
 	potContribution(0),
 	holeCards(),
 	action(PlayerAction::Action::UndefinedAction)

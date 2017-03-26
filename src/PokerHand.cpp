@@ -8,6 +8,11 @@ InversePalindrome.com
 #include "PokerHand.hpp"
 
 
+PokerHand::PokerHand(const std::vector<Card>& handCards) :
+	PokerHand(handCards, {})
+{
+}
+
 PokerHand::PokerHand(const std::vector<Card>& communityCards, const std::vector<Card>& holeCards) :
 	CardContainer(communityCards),
 	handStrength(UndefinedHand),
@@ -15,18 +20,6 @@ PokerHand::PokerHand(const std::vector<Card>& communityCards, const std::vector<
 	rankTotal{}
 {
 	addCards(holeCards);
-	sort();
-	cards.erase(std::unique(cards.begin(), cards.end()), cards.end());
-	initializeRankTotal();
-	classifyHand();
-}
-
-PokerHand::PokerHand(const std::vector<Card>& handCards) :
-	CardContainer(handCards),
-	handStrength(UndefinedHand),
-	kicker(0),
-	rankTotal{}
-{
 	sort();
 	cards.erase(std::unique(cards.begin(), cards.end()), cards.end());
 	initializeRankTotal();
@@ -100,20 +93,16 @@ std::size_t PokerHand::findHighCard(std::size_t nthHighCard) const
 {
 	auto it = this->rankTotal.begin();
 
-	for (std::size_t i = 0; i < nthHighCard; i++, it++)
+	for (std::size_t i = 0; i < nthHighCard || it != this->rankTotal.end(); i++, it++)
 	{
 		it = std::find(it, this->rankTotal.end(), 1);
 
-		if (i == nthHighCard - 1)
+		if (i == nthHighCard - 1 && it != this->rankTotal.end())
 		{
 			return Card::RANK_LENGTH - std::distance(this->rankTotal.begin(), it);
 		}
-		else if (it == rankTotal.end())
-		{
-			break;
-		}
 	}
-	
+		
 	return 0;
 }
 
@@ -142,7 +131,7 @@ std::size_t PokerHand::findStraight() const
 	std::size_t consecutiveCount = 0;
 	
 	//checking for regular straight
-	for (std::size_t i = 0, consecutiveCount = 0; i < rankTotal.size(); i++)
+	for (std::size_t i = 0; i < rankTotal.size(); i++)
 	{
 		rankTotal[Card::RANK_LENGTH - 1 - i] > 0 ? consecutiveCount++ : consecutiveCount = 0;
 

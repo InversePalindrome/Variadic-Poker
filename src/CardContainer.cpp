@@ -5,6 +5,7 @@ InversePalindrome.com
 */
 
 
+#include <algorithm>
 #include "CardContainer.hpp"
 
 

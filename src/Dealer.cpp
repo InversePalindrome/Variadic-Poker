@@ -5,6 +5,7 @@ InversePalindrome.com
 */
 
 
+#include <algorithm>
 #include "Dealer.hpp"
 
 
@@ -58,7 +59,8 @@ void Dealer::startHand()
 		player.setAction(PlayerAction::UndefinedAction);
 	}
 
-	postBlinds();
+	this->postBlinds();
+	this->postAnte();
 }
 
 void Dealer::dealPreFlop(std::size_t cardsPerPlayer)
@@ -178,6 +180,14 @@ void Dealer::postBlinds()
 {
 	this->transferChipsFromPlayerToPot(0, this->pokerTable.bigBlind / 2);
 	this->transferChipsFromPlayerToPot(1, this->pokerTable.bigBlind);
+}
+
+void Dealer::postAnte()
+{
+	for (std::size_t i = 0; i < this->pokerTable.players.size(); i++)
+	{
+		this->transferChipsFromPlayerToPot(i, this->pokerTable.ante);
+	}
 }
 
 void Dealer::muckHoleCards(Player& player)

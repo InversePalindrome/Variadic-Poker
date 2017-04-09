@@ -5,6 +5,8 @@ InversePalindrome.com
 */
 
 
+#include <algorithm>
+#include <random>
 #include "Deck.hpp"
 
 

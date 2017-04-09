@@ -5,17 +5,24 @@ InversePalindrome.com
 */
 
 
+#include <algorithm>
 #include "PokerTable.hpp"
 
 
 PokerTable::PokerTable(const std::vector<Player>& players) :
-	PokerTable(players, 10)
+	PokerTable(players, 10, 0)
 {
 }
 
 PokerTable::PokerTable(const std::vector<Player>& players, std::size_t bigBlind) :
+	PokerTable(players, bigBlind, 0)
+{
+}
+
+PokerTable::PokerTable(const std::vector<Player>& players, std::size_t bigBlind, std::size_t ante) :
 	players(players),
 	bigBlind(bigBlind),
+	ante(ante),
 	pot(0)
 {
 }
@@ -28,6 +35,11 @@ std::vector<Player> PokerTable::getPlayers() const
 std::size_t PokerTable::getBigBlind() const
 {
 	return this->bigBlind;
+}
+
+std::size_t PokerTable::getAnte() const
+{
+	return this->ante;
 }
 
 std::size_t PokerTable::getPot() const
@@ -50,6 +62,10 @@ void PokerTable::setBigBlind(std::size_t chips)
 	this->bigBlind = chips;
 }
 
+void PokerTable::setAnte(std::size_t chips)
+{
+	this->ante = ante;
+}
 void PokerTable::setPot(std::size_t chips)
 {
 	this->pot = chips;
@@ -102,5 +118,5 @@ bool PokerTable::hasPlayers() const
 
 std::string PokerTable::toString() const
 {
-	return "| Table | " + std::to_string(this->players.size()) + " players | " + std::to_string(this->bigBlind / 2) + " / " + std::to_string(this->bigBlind) + " | ";
+	return "| Table | " + std::to_string(this->players.size()) + " players | " + std::to_string(this->bigBlind / 2) + " / " + std::to_string(this->bigBlind) + " blinds | " + std::to_string(this->ante) + " ante |";
 }

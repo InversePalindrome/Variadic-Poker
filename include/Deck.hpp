@@ -7,8 +7,6 @@ InversePalindrome.com
 
 #pragma once
 #include <vector>
-#include <algorithm>
-#include <random>
 #include "Card.hpp"
 #include "CardContainer.hpp"
 

@@ -7,8 +7,6 @@ InversePalindrome.com
 
 #pragma once
 #include <vector>
-#include <string>
-#include <algorithm>
 #include "Player.hpp"
 #include "Deck.hpp"
 #include "Card.hpp"
@@ -51,6 +49,7 @@ private:
 	void transferCardsToDeck();
 
 	void postBlinds();
+	void postAnte();
 	void muckHoleCards(Player& player);
 
 	std::size_t minContribution() const;

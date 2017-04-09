@@ -9,9 +9,6 @@ InversePalindrome.com
 #include <string>
 #include <vector>
 #include <array>
-#include <algorithm>
-#include <numeric>
-#include <tuple>
 #include "CardContainer.hpp"
 
 

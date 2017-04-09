@@ -7,8 +7,6 @@ InversePalindrome.com
 
 #pragma once
 #include <string>
-#include <cmath>
-#include <stdexcept>
 #include "CardContainer.hpp"
 #include "PlayerAction.hpp"
 

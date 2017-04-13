@@ -52,4 +52,5 @@ private:
 	void transitionToMenu();
 	void positionPlayerLabels();
 	void adjustBetEntry();
+	void updatePlayerLabel(const std::string& playerName, std::size_t playerLabelPosition);
 };

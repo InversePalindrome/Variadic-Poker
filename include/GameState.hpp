@@ -10,6 +10,7 @@ InversePalindrome.com
 #include <SFML/System/Time.hpp>
 #include <SFGUI/Desktop.hpp>
 #include "TextureManager.hpp"
+#include "PokerTable.hpp"
 
 
 class StateStack;
@@ -17,15 +18,23 @@ class StateStack;
 class GameState
 {
 public:
-	GameState(sf::RenderWindow& window, StateStack& states, TextureManager& textures);
+	struct Data
+	{
+		Data(sf::RenderWindow& window, TextureManager& textures, PokerTable& pokerTable);
+
+		sf::RenderWindow& window;
+		TextureManager& textures;
+		PokerTable& pokerTable;
+	};
+
+	GameState(StateStack& states, Data& data);
 
 	virtual void processEvent() = 0;
 	virtual void update(sf::Time deltaTime) = 0;
 	virtual void draw() = 0;
 
 protected:
-	sf::RenderWindow& window;
 	StateStack& states;
-	TextureManager& textures;
+	Data data;
 	sfg::Desktop hud;
 };

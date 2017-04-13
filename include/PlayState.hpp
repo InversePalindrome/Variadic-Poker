@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #pragma once
+#include <vector>
 #include <SFML/System/Time.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFGUI/Box.hpp>
@@ -14,8 +15,10 @@ InversePalindrome.com
 #include <SFGUI/Adjustment.hpp>
 #include <SFGUI/Button.hpp>
 #include <SFGUI/Entry.hpp>
+#include <SFGUI/Label.hpp>
 #include "GameState.hpp"
 #include "TextureManager.hpp"
+#include "Dealer.hpp"
 
 
 class StateStack;
@@ -23,7 +26,7 @@ class StateStack;
 class PlayState : public GameState
 {
 public:
-	PlayState(sf::RenderWindow& window, StateStack& states, TextureManager& textures);
+	PlayState(StateStack& states, Data& data);
 
 	virtual void processEvent() override;
 	virtual void update(sf::Time deltaTime) override;
@@ -40,6 +43,13 @@ private:
 	sfg::Button::Ptr callButton;
 	sfg::Button::Ptr betButton;
 	sfg::Entry::Ptr betEntry;
+	sfg::Label::Ptr tableLabel;
+	std::vector<sfg::Label::Ptr> playerLabels;
+
+	Dealer dealer;
+	const std::string mainPlayerName;
 
 	void transitionToMenu();
+	void positionPlayerLabels();
+	void adjustBetEntry();
 };

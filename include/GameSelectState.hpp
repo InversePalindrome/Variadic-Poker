@@ -6,6 +6,7 @@ InversePalindrome.com
 
 
 #pragma once
+#include <string>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFGUI/Window.hpp>
 #include <SFGUI/Box.hpp>
@@ -22,7 +23,7 @@ class StateStack;
 class GameSelectState : public GameState
 {
 public:
-	GameSelectState(sf::RenderWindow& window, StateStack& states, TextureManager& textures);
+	GameSelectState(StateStack& states, Data& data);
 
 	virtual void processEvent() override;
 	virtual void update(sf::Time deltaTime) override;
@@ -47,4 +48,6 @@ private:
 
 	void transitionToMenu();
 	void transitionToPlay();
+
+	void setPokerTable(const std::string& playerName, std::size_t tableSize, std::size_t bigBlind, std::size_t ante, std::size_t startingStack);
 };

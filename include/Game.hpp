@@ -7,9 +7,9 @@ InversePalindrome.com
 
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <SFGUI/SFGUI.hpp>
 #include "StateStack.hpp"
 #include "TextureManager.hpp"
+#include "PokerTable.hpp"
 
 
 class Game
@@ -19,7 +19,9 @@ public:
 	void run();
 
 private:
-	sf::RenderWindow window;
 	StateStack states;
+	GameState::Data data;
+	sf::RenderWindow window;
 	TextureManager textures;
+	PokerTable pokerTable;
 };

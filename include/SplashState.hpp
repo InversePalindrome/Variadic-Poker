@@ -18,7 +18,7 @@ class StateStack;
 class SplashState : public GameState
 {
 public:
-	SplashState(sf::RenderWindow& window, StateStack& states, TextureManager& textures);
+	SplashState(StateStack& states, Data& data);
 
 	virtual void processEvent() override;
 	virtual void update(sf::Time deltaTime) override;

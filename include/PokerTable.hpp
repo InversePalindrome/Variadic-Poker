@@ -7,6 +7,7 @@ InversePalindrome.com
 
 #pragma once
 #include <vector>
+#include <string>
 #include "Player.hpp"
 
 
@@ -19,6 +20,7 @@ public:
 	PokerTable(const std::vector<Player>& players, std::size_t bigBlind);
 	PokerTable(const std::vector<Player>& players, std::size_t bigBlind, std::size_t ante);
 
+	Player getPlayer(const std::string& playerName) const;
 	std::vector<Player> getPlayers() const;
 	std::size_t getBigBlind() const;
 	std::size_t getAnte() const;

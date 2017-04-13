@@ -7,7 +7,6 @@ InversePalindrome.com
 
 #pragma once
 #include <vector>
-#include "Player.hpp"
 #include "Deck.hpp"
 #include "Card.hpp"
 #include "PokerTable.hpp"
@@ -36,7 +35,10 @@ public:
 	void dealRiver();
 	void endHand();
 
-	void changePositions();
+	void transferChipsFromPlayerToPot(std::size_t playerPosition, std::size_t chips);
+	void makeFold(std::size_t playerPosition);
+	void makeCall(std::size_t playerPosition);
+	void makeBet(std::size_t playerPosition, std::size_t chips);
 	
 private:
 	PokerTable pokerTable;
@@ -44,14 +46,14 @@ private:
 	CardContainer communityCards;
 	CardContainer muckedCards;
 
-	void transferChipsFromPlayerToPot(std::size_t playerPosition, std::size_t chips);
+	void changePositions();
 	void transferPotToWinner();
 	void transferCardsToDeck();
 
 	void postBlinds();
 	void postAnte();
-	void muckHoleCards(Player& player);
 
 	std::size_t minContribution() const;
+	std::size_t maxContribution() const;
 	std::vector<PokerHand> rankedPokerHands() const;
 };

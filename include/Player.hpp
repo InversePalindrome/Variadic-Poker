@@ -8,12 +8,13 @@ InversePalindrome.com
 #pragma once
 #include <string>
 #include "CardContainer.hpp"
-#include "PlayerAction.hpp"
 
 
 class Player
 {
 public:
+	enum Action { UndefinedAction, Fold, Call, Bet };
+
 	Player(const std::string& name);
 	Player(const std::string& name, std::size_t stack);
 
@@ -21,13 +22,13 @@ public:
 	std::size_t getStack() const;
 	std::size_t getPotContribution() const;
 	CardContainer getHoleCards() const;
-	PlayerAction getAction() const;
+	Action getAction() const;
 
 	void setName(const std::string& name);
 	void setStack(std::size_t stack);
 	void setPotContribution(std::size_t potContribution);
 	void setHoleCards(const CardContainer& holeCards);
-	void setAction(const PlayerAction& action);
+	void setAction(Action action);
 
 	void addToStack(std::size_t chips);
 	void addToPotContribution(std::size_t chips);
@@ -51,5 +52,5 @@ private:
 	std::size_t stack;
 	std::size_t potContribution;
 	CardContainer holeCards;
-	PlayerAction action;
+	Action action;
 };

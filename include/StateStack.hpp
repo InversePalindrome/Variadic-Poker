@@ -7,7 +7,6 @@ InversePalindrome.com
 
 #pragma once
 #include <memory>
-#include <stack>
 #include <vector>
 #include <map>
 #include <functional>
@@ -31,20 +30,18 @@ public:
 	void draw();
 
 	template<typename T>
-	void registerState(StateID stateName, sf::RenderWindow& window, StateStack& states, TextureManager& textures);
+	void registerState(StateID stateName, StateStack& states, GameState::Data& data);
 
 	void pushState(StateID stateName);
 
 	void popState();
-
-	void swapState(StateID stateName);
 
 	void clearStates();
 
 	bool hasStates() const;
 
 private:
-	std::stack<std::unique_ptr<GameState>> states;
+	std::vector<std::unique_ptr<GameState>> states;
 	std::vector<std::pair<StackAction, StateID>> pendingActions;
 	std::map<StateID, std::function<std::unique_ptr<GameState>()>> stateMap;
 
@@ -54,7 +51,7 @@ private:
 
 
 template<typename T>
-void StateStack::registerState(StateID stateName, sf::RenderWindow& window, StateStack& states, TextureManager& textures)
+void StateStack::registerState(StateID stateName, StateStack& states, GameState::Data& data)
 {
-	this->stateMap[stateName] = [&]() { return std::unique_ptr<GameState>(new T(window, states, textures)); };
+	this->stateMap[stateName] = [&]() { return std::unique_ptr<GameState>(new T(states, data)); };
 }

@@ -58,15 +58,17 @@ PlayState::PlayState(StateStack& states, Data& data) :
 
 	foldButton = sfg::Button::Create("    Fold    ");
 	foldButton->GetSignal(sfg::Button::OnLeftClick).Connect(
-		[this, data] { dealer.makeFold(data.pokerTable.findPlayer(data.pokerTable.getPlayer(mainPlayerName))); });
+		[this, data] { dealer.makeFold(dealer.getPokerTable().findPlayer(data.pokerTable.getPlayer(mainPlayerName))); });
 
 	callButton = sfg::Button::Create("    Call    ");
 	callButton->GetSignal(sfg::Button::OnLeftClick).Connect(
-		[this, data] { dealer.makeCall(data.pokerTable.findPlayer(data.pokerTable.getPlayer(mainPlayerName))); });
+		[this, data] { dealer.makeCall(dealer.getPokerTable().findPlayer(data.pokerTable.getPlayer(mainPlayerName))); 
+	updatePlayerLabel(mainPlayerName, 0); });
 
 	betButton = sfg::Button::Create("    Bet    ");
 	betButton->GetSignal(sfg::Button::OnLeftClick).Connect(
-		[this, data] { dealer.makeBet(data.pokerTable.findPlayer(data.pokerTable.getPlayer(mainPlayerName)), static_cast<std::size_t>(std::stoull(betEntry->GetText().toAnsiString()))); });
+		[this, data] { dealer.makeBet(dealer.getPokerTable().findPlayer(data.pokerTable.getPlayer(mainPlayerName)), static_cast<std::size_t>(std::stoull(betEntry->GetText().toAnsiString()))); 
+	updatePlayerLabel(mainPlayerName, 0); });
 
 	actionFrame = sfg::Box::Create(sfg::Box::Orientation::HORIZONTAL, 50.f);
 	actionFrame->Pack(foldButton);
@@ -77,7 +79,7 @@ PlayState::PlayState(StateStack& states, Data& data) :
 	actionFrame->SetPosition(sf::Vector2f(data.window.getSize().x / 9.1f, data.window.getSize().y - 80.f));
 
 	tableLabel = sfg::Label::Create(this->data.pokerTable.toString());
-	tableLabel->SetPosition(sf::Vector2f(data.window.getSize().x / 2.8f, data.window.getSize().y / 4.f));
+	tableLabel->SetPosition(sf::Vector2f(data.window.getSize().x / 2.5f, data.window.getSize().y / 4.f));
 
 	const auto& players = dealer.getPokerTable().getPlayers();
 	
@@ -87,7 +89,7 @@ PlayState::PlayState(StateStack& states, Data& data) :
 	}
 
 	positionPlayerLabels();
-
+	
 	hud.Add(menuButton);
 	hud.Add(tableLabel);
 	hud.Add(actionFrame);
@@ -162,5 +164,10 @@ void PlayState::positionPlayerLabels()
 
 void PlayState::adjustBetEntry()
 {
-	this->betEntry->SetText(std::to_string(static_cast<std::size_t>(this->betAdjustment->GetValue() / (this->betAdjustment->GetUpper() - this->betAdjustment->GetPageSize()) * this->data.pokerTable.getPlayer(this->mainPlayerName).getStack())));
+	this->betEntry->SetText(std::to_string(static_cast<std::size_t>(this->betAdjustment->GetValue() / (this->betAdjustment->GetUpper() - this->betAdjustment->GetPageSize()) * this->dealer.getPokerTable().getPlayer(this->mainPlayerName).getStack())));
+}
+
+void PlayState::updatePlayerLabel(const std::string& playerName, std::size_t playerLabelPosition)
+{
+	this->playerLabels.at(playerLabelPosition)->SetText(this->dealer.getPokerTable().getPlayer(playerName).toString());
 }

@@ -124,5 +124,5 @@ bool PokerTable::hasPlayers() const
 
 std::string PokerTable::toString() const
 {
-	return std::to_string(this->players.size()) + " players | " + std::to_string(this->bigBlind / 2) + " / " + std::to_string(this->bigBlind) + " blinds | " + std::to_string(this->ante) + " ante";
+	return "| " + std::to_string(this->bigBlind / 2) + " / " + std::to_string(this->bigBlind) + " blinds | " + std::to_string(this->ante) + " ante |";
 }

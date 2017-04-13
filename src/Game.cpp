@@ -16,14 +16,16 @@ InversePalindrome.com
 
 
 Game::Game() :
-	window(sf::VideoMode(1920, 1200), "Variadic-Poker"),
 	states(),
-	textures()
+	data(window, textures, pokerTable),
+	window(sf::VideoMode(1920, 1200), "Variadic-Poker"),
+	textures(),
+	pokerTable({})
 {
-	states.registerState<SplashState>(StateStack::SplashState, window, states, textures);
-	states.registerState<MenuState>(StateStack::MenuState, window, states, textures);
-	states.registerState<GameSelectState>(StateStack::GameSelectState, window, states, textures);
-	states.registerState<PlayState>(StateStack::PlayState, window, states, textures);
+	states.registerState<SplashState>(StateStack::SplashState, states, data);
+	states.registerState<MenuState>(StateStack::MenuState, states, data);
+	states.registerState<GameSelectState>(StateStack::GameSelectState, states, data);
+	states.registerState<PlayState>(StateStack::PlayState, states, data);
 
 	states.pushState(StateStack::SplashState);
 }

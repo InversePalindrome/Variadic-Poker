@@ -7,7 +7,6 @@ InversePalindrome.com
 
 #include <algorithm>
 #include <numeric>
-#include <tuple>
 #include "PokerHand.hpp"
 
 

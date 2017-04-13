@@ -18,7 +18,7 @@ Player::Player(const std::string& name, std::size_t stack) :
 	stack(stack),
 	potContribution(0),
 	holeCards(),
-	action(PlayerAction::Action::UndefinedAction)
+	action(Action::UndefinedAction)
 {
 }
 
@@ -42,7 +42,7 @@ CardContainer Player::getHoleCards() const
 	return this->holeCards;
 }
 
-PlayerAction Player::getAction() const
+Player::Action Player::getAction() const
 {
 	return this->action;
 }
@@ -67,7 +67,7 @@ void Player::setHoleCards(const CardContainer& holeCards)
 	this->holeCards = holeCards;
 }
 
-void Player::setAction(const PlayerAction& action)
+void Player::setAction(Action action)
 {
 	this->action = action;
 }
@@ -109,12 +109,12 @@ void Player::clearHoleCards()
 
 bool Player::isActive() const
 {
-	return this->action.getAction() !=  PlayerAction::Fold;
+	return this->action != Action::Fold;
 }
 
 std::string Player::toString() const
 {
-	return "| " + this->name + " | " + std::to_string(this->stack) + " chips " + this->holeCards.toString();
+	return this->name + "\n" + std::to_string(this->stack) + " chips";
 }
 
 bool Player::operator==(const Player& otherPlayer) const

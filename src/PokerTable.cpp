@@ -27,6 +27,12 @@ PokerTable::PokerTable(const std::vector<Player>& players, std::size_t bigBlind,
 {
 }
 
+Player PokerTable::getPlayer(const std::string& playerName) const
+{
+	return this->players.at(std::distance(this->players.begin(), std::find_if(this->players.begin(), this->players.end(), 
+		[&](const Player& player) { return player.getName() == playerName; })));
+}
+
 std::vector<Player> PokerTable::getPlayers() const
 {
 	return this->players;
@@ -118,5 +124,5 @@ bool PokerTable::hasPlayers() const
 
 std::string PokerTable::toString() const
 {
-	return "| Table | " + std::to_string(this->players.size()) + " players | " + std::to_string(this->bigBlind / 2) + " / " + std::to_string(this->bigBlind) + " blinds | " + std::to_string(this->ante) + " ante |";
+	return std::to_string(this->players.size()) + " players | " + std::to_string(this->bigBlind / 2) + " / " + std::to_string(this->bigBlind) + " blinds | " + std::to_string(this->ante) + " ante";
 }

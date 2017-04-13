@@ -11,10 +11,12 @@ InversePalindrome.com
 #include "GameSelectState.hpp"
 #include "MenuState.hpp"
 #include "PlayState.hpp"
+#include "PokerTable.hpp"
+#include "Player.hpp"
 
 
-GameSelectState::GameSelectState(sf::RenderWindow& window, StateStack& states, TextureManager& textures) :
-	GameState(window, states, textures),
+GameSelectState::GameSelectState(StateStack& states, Data& data) :
+	GameState(states, data),
 	selectionWindow(),
 	selectionFrame(),
 	tableSizeOptions(),
@@ -30,13 +32,13 @@ GameSelectState::GameSelectState(sf::RenderWindow& window, StateStack& states, T
 	playerNameLabel(),
 	playerStackLabel()
 {
-	textures.loadTexture("TableSelectBackground", "TableSelectBackground.jpg");
-	const auto& backgroundTexture = textures.getTexture("TableSelectBackground");
+	data.textures.loadTexture("TableSelectBackground", "TableSelectBackground.jpg");
+	const auto& backgroundTexture = data.textures.getTexture("TableSelectBackground");
 
 	background.setTexture(backgroundTexture);
 	background.setOrigin(background.getLocalBounds().width / 2.f, background.getLocalBounds().height / 2.f);
-	background.setPosition(window.getSize().x / 2.f, window.getSize().y / 2.f);
-	background.setScale(static_cast<float>(window.getSize().x) / backgroundTexture.getSize().x, static_cast<float>(window.getSize().y) / backgroundTexture.getSize().y);
+	background.setPosition(data.window.getSize().x / 2.f, data.window.getSize().y / 2.f);
+	background.setScale(static_cast<float>(data.window.getSize().x) / backgroundTexture.getSize().x, static_cast<float>(data.window.getSize().y) / backgroundTexture.getSize().y);
 
 	menuButton = sfg::Button::Create("  Menu  ");
 	menuButton->GetSignal(sfg::Widget::OnLeftClick).Connect( [this] { transitionToMenu(); });
@@ -47,9 +49,9 @@ GameSelectState::GameSelectState(sf::RenderWindow& window, StateStack& states, T
 	tableSizeLabel = sfg::Label::Create("Table Size:");
 	
 	tableSizeOptions = sfg::ComboBox::Create();
-	tableSizeOptions->AppendItem("Full-Ring");
-	tableSizeOptions->AppendItem("6-Max");
 	tableSizeOptions->AppendItem("Heads-Up");
+	tableSizeOptions->AppendItem("6-Max");
+	tableSizeOptions->AppendItem("Full-Ring");
 
 	bigBlindLabel = sfg::Label::Create("Big Blind:");
 	bigBlindEntry = sfg::Entry::Create();
@@ -83,7 +85,7 @@ GameSelectState::GameSelectState(sf::RenderWindow& window, StateStack& states, T
 	selectionWindow = sfg::Window::Create();
 	selectionWindow->SetTitle("Game Selection");
 	selectionWindow->Add(selectionFrame);
-	selectionWindow->SetPosition(sf::Vector2f(window.getSize().x / 2.4f, window.getSize().y / 3.1f));
+	selectionWindow->SetPosition(sf::Vector2f(data.window.getSize().x / 2.4f, data.window.getSize().y / 3.1f));
 
 	hud.Add(menuButton);
 	hud.Add(selectionWindow);
@@ -93,17 +95,17 @@ void GameSelectState::processEvent()
 {
 	sf::Event event;
 
-	while (this->window.pollEvent(event))
+	while (this->data.window.pollEvent(event))
 	{
 		this->hud.HandleEvent(event);
 
 		switch (event.type)
 		{
 		case sf::Event::Closed:
-			this->window.close();
+			this->data.window.close();
 			break;
 		case sf::Event::Resized:
-			this->selectionWindow->SetPosition(sf::Vector2f(window.getSize().x / 2.4f, window.getSize().y / 3.1f));
+			this->selectionWindow->SetPosition(sf::Vector2f(data.window.getSize().x / 2.4f, data.window.getSize().y / 3.1f));
 			break;
 		}
 	}
@@ -111,16 +113,14 @@ void GameSelectState::processEvent()
 
 void GameSelectState::update(sf::Time deltaTime)
 {
-	this->menuButton->Show(true);
-	this->selectionWindow->Show(true);
-	this->hud.Update(deltaTime.asMilliseconds());
+	this->hud.Update(static_cast<float>(deltaTime.asMicroseconds()));
 }
 
 void GameSelectState::draw()
 {
-	this->window.clear(sf::Color::Black);
-	this->window.draw(this->background);
-	this->states.sfgui.Display(this->window);
+	this->data.window.clear(sf::Color::Black);
+	this->data.window.draw(this->background);
+	this->states.sfgui.Display(this->data.window);
 }
 
 void GameSelectState::transitionToMenu()
@@ -134,6 +134,39 @@ void GameSelectState::transitionToPlay()
 {
 	this->menuButton->Show(false);
 	this->selectionWindow->Show(false);
+
+	const auto& name = this->playerNameEntry->GetText().toAnsiString();
+	std::size_t bigBlind = static_cast<std::size_t>(std::stoull(this->bigBlindEntry->GetText().toAnsiString()));
+	std::size_t ante = static_cast<std::size_t>(std::stoull(this->anteEntry->GetText().toAnsiString()));
+	std::size_t startingStack = static_cast<std::size_t>(std::stoull(this->playerStackEntry->GetText().toAnsiString()));
+	std::size_t tableSize = 1;
+
+	switch (this->tableSizeOptions->GetSelectedItem())
+	{
+	case 0:
+		tableSize = 2;
+		break;
+	case 1:
+		tableSize = 6;
+		break;
+	case 2:
+		tableSize = 9;
+	}
+
+	this->setPokerTable(name, tableSize, bigBlind, ante, startingStack);
 	this->states.popState();
 	this->states.pushState(StateStack::PlayState);
+}
+
+void GameSelectState::setPokerTable(const std::string& playerName, std::size_t tableSize, std::size_t bigBlind, std::size_t ante, std::size_t startingStack)
+{
+	this->data.pokerTable.addPlayer(Player(playerName, startingStack));
+
+	for (std::size_t i = 1; i < tableSize; i++)
+	{
+		this->data.pokerTable.addPlayer(Player("Player_AI" + std::to_string(i), startingStack));
+	}
+
+	this->data.pokerTable.setBigBlind(bigBlind);
+	this->data.pokerTable.setAnte(ante);
 }

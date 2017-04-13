@@ -9,10 +9,16 @@ InversePalindrome.com
 #include "StateStack.hpp"
 
 
-GameState::GameState(sf::RenderWindow& window, StateStack& states, TextureManager& textures) :
+GameState::Data::Data(sf::RenderWindow& window, TextureManager& textures, PokerTable& pokerTable) :
 	window(window),
-	states(states),
 	textures(textures),
+	pokerTable(pokerTable)
+{
+}
+
+GameState::GameState(StateStack& states, Data& data) :
+	states(states),
+	data(data),
 	hud()
 {
 }

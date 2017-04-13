@@ -20,7 +20,7 @@ void StateStack::processEvent()
 {
 	if (!this->states.empty())
 	{
-		this->states.top()->processEvent();
+		this->states.back()->processEvent();
 	}
 
 	this->applyPendingState();
@@ -30,7 +30,7 @@ void StateStack::update(sf::Time deltaTime)
 {
 	if (!this->states.empty())
 	{
-		this->states.top()->update(deltaTime);
+		this->states.back()->update(deltaTime);
 	}
 
 	this->applyPendingState();
@@ -40,7 +40,7 @@ void StateStack::draw()
 {
 	if (!this->states.empty())
 	{
-		this->states.top()->draw();
+		this->states.back()->draw();
 	}
 }
 
@@ -76,17 +76,13 @@ void StateStack::applyPendingState()
 		switch (action.first)
 		{
 		case Push:
-			this->states.push(this->selectState(action.second));
+			this->states.push_back(this->selectState(action.second));
 			break;
 		case Pop:
-			this->states.pop();
+			this->states.pop_back();
 			break;
 		case Clear:
-			while (!this->states.empty())
-			{
-				this->states.pop();
-			}
-
+			this->states.clear();
 			break;
 		}
 	}

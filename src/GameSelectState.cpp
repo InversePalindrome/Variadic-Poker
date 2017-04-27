@@ -104,9 +104,6 @@ void GameSelectState::processEvent()
 		case sf::Event::Closed:
 			this->data.window.close();
 			break;
-		case sf::Event::Resized:
-			this->selectionWindow->SetPosition(sf::Vector2f(data.window.getSize().x / 2.4f, data.window.getSize().y / 3.1f));
-			break;
 		}
 	}
 }
@@ -120,7 +117,7 @@ void GameSelectState::draw()
 {
 	this->data.window.clear(sf::Color::Black);
 	this->data.window.draw(this->background);
-	this->states.sfgui.Display(this->data.window);
+	this->data.sfgui.Display(this->data.window);
 }
 
 void GameSelectState::transitionToMenu()
@@ -134,12 +131,44 @@ void GameSelectState::transitionToPlay()
 {
 	this->menuButton->Show(false);
 	this->selectionWindow->Show(false);
+ 
+	std::string name = this->playerNameEntry->GetText().toAnsiString();
+	if (name.empty())
+	{
+		name = "Player";
+	}
 
-	const auto& name = this->playerNameEntry->GetText().toAnsiString();
-	std::size_t bigBlind = static_cast<std::size_t>(std::stoull(this->bigBlindEntry->GetText().toAnsiString()));
-	std::size_t ante = static_cast<std::size_t>(std::stoull(this->anteEntry->GetText().toAnsiString()));
-	std::size_t startingStack = static_cast<std::size_t>(std::stoull(this->playerStackEntry->GetText().toAnsiString()));
-	std::size_t tableSize = 1;
+	std::size_t bigBlind;
+	try
+	{
+		bigBlind = static_cast<std::size_t>(std::stoull(this->bigBlindEntry->GetText().toAnsiString()));
+	}
+	catch (const std::invalid_argument& e)
+	{
+		bigBlind = 10;
+	}
+
+	std::size_t ante;
+	try
+	{
+		ante = static_cast<std::size_t>(std::stoull(this->anteEntry->GetText().toAnsiString()));
+	}
+	catch (const std::invalid_argument& e)
+	{
+		ante = 0;
+	}
+
+	std::size_t startingStack;
+	try
+	{
+		startingStack = static_cast<std::size_t>(std::stoull(this->playerStackEntry->GetText().toAnsiString()));
+	}
+	catch (const std::invalid_argument& e)
+	{
+		startingStack = 1000;
+	}
+	
+	std::size_t tableSize = 2;
 
 	switch (this->tableSizeOptions->GetSelectedItem())
 	{
@@ -160,12 +189,14 @@ void GameSelectState::transitionToPlay()
 
 void GameSelectState::setPokerTable(const std::string& playerName, std::size_t tableSize, std::size_t bigBlind, std::size_t ante, std::size_t startingStack)
 {
-	this->data.pokerTable.addPlayer(Player(playerName, startingStack));
-
 	for (std::size_t i = 1; i < tableSize; i++)
 	{
 		this->data.pokerTable.addPlayer(Player("Player_AI" + std::to_string(i), startingStack));
 	}
+
+	std::size_t mainPlayerPosition = tableSize > 2 ? 2 : 0;
+
+	this->data.pokerTable.insertPlayer(Player(playerName, startingStack), mainPlayerPosition);
 
 	this->data.pokerTable.setBigBlind(bigBlind);
 	this->data.pokerTable.setAnte(ante);

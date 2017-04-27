@@ -95,14 +95,20 @@ std::size_t PokerHand::findHighCard(std::size_t nthHighCard) const
 {
 	auto it = this->rankTotal.begin();
 
-	for (std::size_t i = 0; i < nthHighCard || it != this->rankTotal.end(); i++, it++)
+	for (std::size_t i = 0; i < nthHighCard; i++)
 	{
 		it = std::find(it, this->rankTotal.end(), 1);
 
-		if (i == nthHighCard - 1 && it != this->rankTotal.end())
+		if (it == this->rankTotal.end())
+		{
+			break;
+		}
+		else if (i == nthHighCard - 1)
 		{
 			return Card::RANK_LENGTH - std::distance(this->rankTotal.begin(), it);
 		}
+
+		it++;
 	}
 		
 	return 0;

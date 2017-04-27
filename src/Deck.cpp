@@ -42,12 +42,10 @@ Card Deck::getCard() const
 	return this->cards.back();
 }
 
-void Deck::removeCards(std::size_t numOfCards)
-{
-	this->cards.resize(this->getSize() - numOfCards);
-}
-
 void Deck::shuffle()
 {
-	std::shuffle(this->CardContainer::cards.begin(), this->cards.end(), std::default_random_engine{});
+	std::random_device rd;
+	std::mt19937 mt(rd());
+
+	std::shuffle(this->cards.begin(), this->cards.end(), mt);
 }

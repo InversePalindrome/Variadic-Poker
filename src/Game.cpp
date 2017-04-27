@@ -17,8 +17,9 @@ InversePalindrome.com
 
 Game::Game() :
 	states(),
-	data(window, textures, pokerTable),
-	window(sf::VideoMode(1920, 1200), "Variadic-Poker"),
+	data(window, sfgui, textures, pokerTable),
+	window(sf::VideoMode(1920, 1200), "Variadic-Poker", sf::Style::Titlebar | sf::Style::Close),
+	sfgui(),
 	textures(),
 	pokerTable({})
 {
@@ -39,6 +40,8 @@ void Game::run()
 
 	while (this->window.isOpen())
 	{
+		this->states.processEvent();
+
 		sf::Time deltaTime = clock.restart();
 		elapsedTime += deltaTime;
 
@@ -46,7 +49,6 @@ void Game::run()
 		{
 			elapsedTime -= timePerFrame;
 
-			this->states.processEvent();
 			this->states.update(deltaTime);
 			this->window.clear(sf::Color::Black);
 		}

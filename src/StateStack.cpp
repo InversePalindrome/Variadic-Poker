@@ -9,7 +9,6 @@ InversePalindrome.com
 
 
 StateStack::StateStack() :
-	sfgui(),
 	states(),
 	pendingActions(),
 	stateMap()
@@ -46,22 +45,28 @@ void StateStack::draw()
 
 void StateStack::pushState(StateID stateName)
 {
-	this->pendingActions.push_back(std::make_pair(StackAction::Push, stateName));
+	this->pendingActions.push_back(PendingAction(StackAction::Push, stateName));
 }
 
 void StateStack::popState()
 {
-	this->pendingActions.push_back(std::make_pair(StackAction::Pop, StateID::UndefinedState));
+	this->pendingActions.push_back(PendingAction(StackAction::Pop, StateID::UndefinedState));
 }
 
 void StateStack::clearStates()
 {
-	this->pendingActions.push_back(std::make_pair(StackAction::Clear, StateID::UndefinedState));
+	this->pendingActions.push_back(PendingAction(StackAction::Clear, StateID::UndefinedState));
 }
 
 bool StateStack::hasStates() const
 {
 	return !this->states.empty();
+}
+
+StateStack::PendingAction::PendingAction(StackAction stackAction, StateID stateID) :
+	stackAction(stackAction),
+	stateID(stateID)
+{
 }
 
 std::unique_ptr<GameState> StateStack::selectState(StateID stateName)
@@ -73,10 +78,10 @@ void StateStack::applyPendingState()
 {
 	for (const auto& action : this->pendingActions)
 	{
-		switch (action.first)
+		switch (action.stackAction)
 		{
 		case Push:
-			this->states.push_back(this->selectState(action.second));
+			this->states.push_back(this->selectState(action.stateID));
 			break;
 		case Pop:
 			this->states.pop_back();

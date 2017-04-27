@@ -70,7 +70,7 @@ void PokerTable::setBigBlind(std::size_t chips)
 
 void PokerTable::setAnte(std::size_t chips)
 {
-	this->ante = ante;
+	this->ante = chips;
 }
 void PokerTable::setPot(std::size_t chips)
 {
@@ -102,6 +102,11 @@ void PokerTable::removeChipsFromPlayer(const Player& player, std::size_t chips)
 	this->players.at(findPlayer(player)).removeFromStack(chips);
 }
 
+void PokerTable::insertPlayer(const Player& player, std::size_t playerPosition)
+{
+	this->players.insert(this->players.begin() + playerPosition, player);
+}
+
 void PokerTable::clearPlayers()
 {
 	this->players.clear();
@@ -115,6 +120,18 @@ void PokerTable::clearPot()
 std::size_t PokerTable::findPlayer(const Player& player) const
 {
 	return std::distance(this->players.begin(), std::find(this->players.begin(), this->players.end(), player));
+}
+
+std::size_t PokerTable::activePlayerCount() const
+{
+	return std::count_if(this->players.begin(), this->players.end(),
+		[&](const Player& player) { return player.isActive() && player.getStack() > 0; });
+}
+
+std::size_t PokerTable::allInCount() const
+{
+	return std::count_if(this->players.begin(), this->players.end(),
+		[&](const Player& player) { return player.isActive() && player.getStack() == 0; });
 }
 
 bool PokerTable::hasPlayers() const

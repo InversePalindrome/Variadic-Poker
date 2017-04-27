@@ -47,9 +47,6 @@ void MenuState::processEvent()
 		case sf::Event::Closed:
 			this->data.window.close();
 			break;
-		case sf::Event::Resized:
-			this->playButton->SetPosition(sf::Vector2f(this->data.window.getSize().x / 2.15f, this->data.window.getSize().y / 1.1f));
-			break;
 		}
 	}
 }
@@ -64,7 +61,7 @@ void MenuState::draw()
 {
 	this->data.window.clear(sf::Color::Black);
 	this->data.window.draw(this->background);
-	this->states.sfgui.Display(this->data.window);
+	this->data.sfgui.Display(this->data.window);
 }
 
 void MenuState::transitionToGameSelect()

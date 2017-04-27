@@ -21,3 +21,8 @@ void TextureManager::loadTexture(const std::string& name, const std::string& fil
 
 	this->textures[name] = texture;
 }
+
+bool TextureManager::hasTexture(const std::string& name) const
+{
+	return this->textures.count(name) > 0;
+}

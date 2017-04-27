@@ -41,12 +41,25 @@ void CardContainer::addCard(const Card& card)
 
 void CardContainer::addCards(const std::vector<Card>& cards)
 {
-	this->cards.insert(this->cards.begin(), cards.begin(), cards.end());
+	this->cards.insert(this->cards.end(), cards.begin(), cards.end());
 }
 
 void CardContainer::removeCard(const Card& card)
 {
 	this->cards.erase(std::remove(this->cards.begin(), this->cards.end(), card), this->cards.end());
+}
+
+void CardContainer::removeCards(const std::vector<Card>& cards)
+{
+	for (const auto& card : cards)
+	{
+		this->cards.erase(std::remove(this->cards.begin(), this->cards.end(), card), this->cards.end());
+	}
+}
+
+void CardContainer::removeCards(std::size_t numOfCards)
+{
+	this->cards.resize(this->getSize() - numOfCards);
 }
 
 void CardContainer::clearCards()

@@ -9,8 +9,9 @@ InversePalindrome.com
 #include "StateStack.hpp"
 
 
-GameState::Data::Data(sf::RenderWindow& window, TextureManager& textures, PokerTable& pokerTable) :
+GameState::Data::Data(sf::RenderWindow& window, sfg::SFGUI& sfgui, TextureManager& textures, PokerTable& pokerTable) :
 	window(window),
+	sfgui(sfgui),
 	textures(textures),
 	pokerTable(pokerTable)
 {

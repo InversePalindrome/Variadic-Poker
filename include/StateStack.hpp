@@ -23,8 +23,6 @@ public:
 
 	StateStack();
 
-	sfg::SFGUI sfgui;
-
 	void processEvent();
 	void update(sf::Time deltaTime);
 	void draw();
@@ -41,8 +39,16 @@ public:
 	bool hasStates() const;
 
 private:
+	struct PendingAction
+	{
+		PendingAction(StackAction stackAction, StateID stateID);
+
+		StackAction stackAction;
+		StateID stateID;
+	};
+
 	std::vector<std::unique_ptr<GameState>> states;
-	std::vector<std::pair<StackAction, StateID>> pendingActions;
+	std::vector<PendingAction> pendingActions;
 	std::map<StateID, std::function<std::unique_ptr<GameState>()>> stateMap;
 
 	std::unique_ptr<GameState> selectState(StateID stateName);

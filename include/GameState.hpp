@@ -8,6 +8,7 @@ InversePalindrome.com
 #pragma once
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Time.hpp>
+#include <SFGUI/SFGUI.hpp>
 #include <SFGUI/Desktop.hpp>
 #include "TextureManager.hpp"
 #include "PokerTable.hpp"
@@ -20,9 +21,10 @@ class GameState
 public:
 	struct Data
 	{
-		Data(sf::RenderWindow& window, TextureManager& textures, PokerTable& pokerTable);
+		Data(sf::RenderWindow& window, sfg::SFGUI& sfgui, TextureManager& textures, PokerTable& pokerTable);
 
 		sf::RenderWindow& window;
+		sfg::SFGUI& sfgui;
 		TextureManager& textures;
 		PokerTable& pokerTable;
 	};

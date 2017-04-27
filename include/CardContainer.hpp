@@ -26,6 +26,8 @@ public:
 	void addCards(const std::vector<Card>& cards);
 
 	void removeCard(const Card& card);
+	void removeCards(const std::vector<Card>& cards);
+	void removeCards(std::size_t numOfCards);
 
 	void clearCards();
 

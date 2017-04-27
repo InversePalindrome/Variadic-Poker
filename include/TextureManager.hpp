@@ -18,6 +18,8 @@ public:
 
 	void loadTexture(const std::string& name, const std::string& fileName);
 
+	bool hasTexture(const std::string& name) const;
+
 private:
 	std::unordered_map<std::string, sf::Texture> textures;
 };

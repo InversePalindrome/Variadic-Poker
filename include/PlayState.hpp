@@ -7,6 +7,9 @@ InversePalindrome.com
 
 #pragma once
 #include <vector>
+#include <unordered_map>
+#include <string>
+#include <utility>
 #include <SFML/System/Time.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFGUI/Box.hpp>
@@ -14,11 +17,12 @@ InversePalindrome.com
 #include <SFGUI/Scale.hpp>
 #include <SFGUI/Adjustment.hpp>
 #include <SFGUI/Button.hpp>
-#include <SFGUI/Entry.hpp>
 #include <SFGUI/Label.hpp>
+#include <SFGUI/Entry.hpp>
 #include "GameState.hpp"
 #include "TextureManager.hpp"
 #include "Dealer.hpp"
+#include "PokerAI.hpp"
 
 
 class StateStack;
@@ -44,13 +48,26 @@ private:
 	sfg::Button::Ptr betButton;
 	sfg::Entry::Ptr betEntry;
 	sfg::Label::Ptr tableLabel;
-	std::vector<sfg::Label::Ptr> playerLabels;
+	sfg::Label::Ptr potLabel;
+	std::vector<std::pair<std::string, sfg::Label::Ptr>> playerLabels;
+	std::unordered_map<std::string, sf::Sprite> cardSprites;
 
 	Dealer dealer;
+	PokerAI pokerAI;
 	const std::string mainPlayerName;
+	bool mainPlayerActed;
 
+	void executePokerGame();
 	void transitionToMenu();
+	void processBet();
 	void positionPlayerLabels();
 	void adjustBetEntry();
-	void updatePlayerLabel(const std::string& playerName, std::size_t playerLabelPosition);
+
+	void updatePlayerLabels();
+	void updatePotLabel();
+
+	void assignCardTextures();
+
+	void drawCommunityCards();
+	void drawHoleCards(const std::string& playerName);
 };

@@ -55,7 +55,7 @@ private:
 	Deck deck;
 	CardContainer communityCards;
 	CardContainer muckedCards;
-	Street street;
+	Street street; 
 	std::size_t currentPosition;
 	std::size_t actionCount;
 

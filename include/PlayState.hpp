@@ -9,7 +9,6 @@ InversePalindrome.com
 #include <vector>
 #include <unordered_map>
 #include <string>
-#include <utility>
 #include <SFML/System/Time.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFGUI/Box.hpp>
@@ -37,6 +36,15 @@ public:
 	virtual void draw() override;
 
 private:
+	struct PlayerItem
+	{
+		PlayerItem(const std::string& name, sfg::Label::Ptr label);
+
+		std::string name;
+		sfg::Label::Ptr label;
+		std::vector<sf::Sprite> hiddenHoleCards;
+	};
+
 	sf::Sprite background;
 	sfg::Box::Ptr actionFrame;
 	sfg::Scrollbar::Ptr betBar;
@@ -49,7 +57,7 @@ private:
 	sfg::Entry::Ptr betEntry;
 	sfg::Label::Ptr tableLabel;
 	sfg::Label::Ptr potLabel;
-	std::vector<std::pair<std::string, sfg::Label::Ptr>> playerLabels;
+	std::vector<PlayerItem> playerItems;
 	std::unordered_map<std::string, sf::Sprite> cardSprites;
 
 	Dealer dealer;
@@ -60,14 +68,14 @@ private:
 	void executePokerGame();
 	void transitionToMenu();
 	void processBet();
-	void positionPlayerLabels();
+	void positionPlayerItems();
 	void adjustBetEntry();
 
-	void updatePlayerLabels();
+	void updatePlayerItems();
 	void updatePotLabel();
 
 	void assignCardTextures();
 
 	void drawCommunityCards();
-	void drawHoleCards(const std::string& playerName);
+	void drawHoleCards();
 };

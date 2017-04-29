@@ -34,17 +34,17 @@ public:
 
 	void addPlayer(const Player& player);
 	void addToPot(std::size_t chips);
-	void addChipsToPlayer(const Player& player, std::size_t chips);
+	void addChipsToPlayer(const std::string& playerName, std::size_t chips);
 
-	void removePlayer(const Player& player);
-	void removeChipsFromPlayer(const Player& player, std::size_t chips);
+	void removePlayer(const std::string& playerName);
+	void removeChipsFromPlayer(const std::string& playerName, std::size_t chips);
 
 	void insertPlayer(const Player& player, std::size_t playerPosition);
 
 	void clearPlayers();
 	void clearPot();
 
-	std::size_t findPlayer(const Player& player) const;
+	std::size_t findPlayer(const std::string& playerName) const;
 	
 	std::size_t activePlayerCount() const;
 	std::size_t allInCount() const;

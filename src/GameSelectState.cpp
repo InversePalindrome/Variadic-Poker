@@ -32,7 +32,7 @@ GameSelectState::GameSelectState(StateStack& states, Data& data) :
 	playerNameLabel(),
 	playerStackLabel()
 {
-	data.textures.loadTexture("TableSelectBackground", "TableSelectBackground.jpg");
+	data.textures.loadTexture("TableSelectBackground", "Resources/TableSelectBackground.jpg");
 	const auto& backgroundTexture = data.textures.getTexture("TableSelectBackground");
 
 	background.setTexture(backgroundTexture);

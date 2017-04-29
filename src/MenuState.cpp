@@ -17,7 +17,7 @@ MenuState::MenuState(StateStack& states, Data& data) :
 	background(),
 	playButton()
 {
-	data.textures.loadTexture("MenuBackground", "MenuBackground.png");
+	data.textures.loadTexture("MenuBackground", "Resources/MenuBackground.png");
 	const auto& backgroundTexture = data.textures.getTexture("MenuBackground");
 	
 	background.setTexture(backgroundTexture);

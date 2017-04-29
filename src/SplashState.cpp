@@ -17,7 +17,7 @@ SplashState::SplashState(StateStack& states, Data& data) :
 	background(),
 	timer()
 {
-	data.textures.loadTexture("InPalLogo", "InversePalindromeLogo.png");
+	data.textures.loadTexture("InPalLogo", "Resources/InversePalindromeLogo.png");
 	const auto& logo = data.textures.getTexture("InPalLogo");
 
 	background.setTexture(logo);

@@ -32,7 +32,7 @@ PlayState::PlayState(StateStack& states, Data& data) :
 	mainPlayerName(data.pokerTable.getPlayers().at(data.pokerTable.getSize() > 2 ? 2 : 0).getName()),
 	mainPlayerActed(false)
 {
-	data.textures.loadTexture("PokerTable", "PokerTable.png");
+	data.textures.loadTexture("PokerTable", "Resources/PokerTable.png");
 	const auto& backgroundTexture = data.textures.getTexture("PokerTable");
 	
 	background.setTexture(backgroundTexture);
@@ -270,7 +270,7 @@ void PlayState::assignCardTextures()
 {
 	const auto& cards = Deck().CardContainer::getCards();
 
-	this->data.textures.loadTexture("CardBack", "CardBack.png");
+	this->data.textures.loadTexture("CardBack", "Resources/CardBack.png");
 
 	for (std::size_t i = 1; i <= 52; i++)
 	{
@@ -278,7 +278,7 @@ void PlayState::assignCardTextures()
 
 		if (!this->data.textures.hasTexture(card))
 		{
-			this->data.textures.loadTexture(card, "Card" + std::to_string(i) + ".png");
+			this->data.textures.loadTexture(card, "Resources/Card" + std::to_string(i) + ".png");
 		}
 
 		sf::Sprite cardSprite(this->data.textures.getTexture(card));

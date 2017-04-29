@@ -25,15 +25,13 @@ PlayState::PlayState(StateStack& states, Data& data) :
 	betEntry(),
 	tableLabel(),
 	potLabel(),
-	playerLabels(),
+	playerItems(),
 	cardSprites(),
 	dealer(data.pokerTable),
 	pokerAI(dealer),
 	mainPlayerName(data.pokerTable.getPlayers().at(data.pokerTable.getSize() > 2 ? 2 : 0).getName()),
 	mainPlayerActed(false)
 {
-	assignCardTextures();
-
 	data.textures.loadTexture("PokerTable", "PokerTable.png");
 	const auto& backgroundTexture = data.textures.getTexture("PokerTable");
 	
@@ -64,7 +62,7 @@ PlayState::PlayState(StateStack& states, Data& data) :
 
 	foldButton = sfg::Button::Create("    Fold    ");
 	foldButton->GetSignal(sfg::Button::OnLeftClick).Connect(
-		[this, data] { dealer.makeFold(dealer.getPokerTable().findPlayer(data.pokerTable.getPlayer(mainPlayerName)));
+		[this, data] { dealer.makeFold(dealer.getPokerTable().findPlayer(mainPlayerName));
 	actionFrame->Show(false);
 	mainPlayerActed = true;
 	dealer.updateGameStage();
@@ -72,7 +70,7 @@ PlayState::PlayState(StateStack& states, Data& data) :
 	
 	callButton = sfg::Button::Create("    Call    ");
 	callButton->GetSignal(sfg::Button::OnLeftClick).Connect(
-		[this, data] { dealer.makeCall(dealer.getPokerTable().findPlayer(data.pokerTable.getPlayer(mainPlayerName))); 
+		[this, data] { dealer.makeCall(dealer.getPokerTable().findPlayer(mainPlayerName)); 
 	actionFrame->Show(false);
 	mainPlayerActed = true;
 	dealer.updateGameStage();
@@ -100,25 +98,26 @@ PlayState::PlayState(StateStack& states, Data& data) :
 	dealer.updateGameStage();
 	
 	potLabel = sfg::Label::Create("| Pot: " + std::to_string(this->dealer.getPokerTable().getPot()) + " | Call Amount: " + std::to_string(this->dealer.maxContribution() - this->dealer.getPokerTable().getPlayer(this->mainPlayerName).getPotContribution()) + " |");
-	potLabel->SetPosition(sf::Vector2f(data.window.getSize().x / 2.65f, data.window.getSize().y / 1.8f));
+	potLabel->SetPosition(sf::Vector2f(data.window.getSize().x / 2.7f, data.window.getSize().y / 1.8f));
 
 	const auto& players = dealer.getPokerTable().getPlayers();
 
 	for (auto& player : players)
 	{
-		playerLabels.push_back(std::make_pair(player.getName(), sfg::Label::Create(player.toString())));
+		playerItems.push_back(PlayerItem(player.getName(), sfg::Label::Create(player.toString())));
 	}
 
-	positionPlayerLabels();
+	positionPlayerItems();
+	assignCardTextures();
 	
 	hud.Add(menuButton);
 	hud.Add(tableLabel);
 	hud.Add(potLabel);
 	hud.Add(actionFrame);
 	
-	for (const auto& playerLabel : playerLabels)
+	for (const auto& playerItem : playerItems)
 	{
-		hud.Add(playerLabel.second);
+		hud.Add(playerItem.label);
 	}
 }
 
@@ -145,7 +144,7 @@ void PlayState::processEvent()
 		this->executePokerGame();
 	}
 
-	this->updatePlayerLabels();
+	this->updatePlayerItems();
 	this->updatePotLabel();
 }
 
@@ -159,8 +158,14 @@ void PlayState::draw()
 	this->data.window.clear(sf::Color::Black);
 	this->data.window.draw(this->background);
 	this->drawCommunityCards();
-	this->drawHoleCards(this->mainPlayerName);
+	this->drawHoleCards();
 	this->data.sfgui.Display(this->data.window);
+}
+
+PlayState::PlayerItem::PlayerItem(const std::string& name, sfg::Label::Ptr label) :
+	name(name),
+	label(label)
+{
 }
 
 void PlayState::executePokerGame()
@@ -184,9 +189,9 @@ void PlayState::transitionToMenu()
 	this->potLabel->Show(false);
 	this->actionFrame->Show(false);
 
-	for (const auto& playerLabel : playerLabels)
+	for (const auto& playerItem : this->playerItems)
 	{
-		playerLabel.second->Show(false);
+		playerItem.label->Show(false);
 	}
 
 	this->states.popState();
@@ -196,30 +201,30 @@ void PlayState::processBet()
 {
 	try
 	{
-		this->dealer.makeBet(this->dealer.getPokerTable().findPlayer(data.pokerTable.getPlayer(mainPlayerName)), static_cast<std::size_t>(std::stoull(betEntry->GetText().toAnsiString())));
+		this->dealer.makeBet(this->dealer.getPokerTable().findPlayer(mainPlayerName), static_cast<std::size_t>(std::stoull(betEntry->GetText().toAnsiString())));
 	}
 	catch (const std::invalid_argument& e)
 	{
-		this->dealer.makeCall(this->dealer.getPokerTable().findPlayer(data.pokerTable.getPlayer(mainPlayerName)));
+		this->dealer.makeCall(this->dealer.getPokerTable().findPlayer(mainPlayerName));
 	}
 }
 
-void PlayState::positionPlayerLabels()
+void PlayState::positionPlayerItems()
 {
-	std::size_t labelPosition = this->playerLabels.size() > 2 ? 2 : 0;
+	std::size_t labelPosition = this->playerItems.size() > 2 ? 2 : 0;
 
-	for (std::size_t i = 0; i < playerLabels.size(); i++, labelPosition++)
+	for (std::size_t i = 0; i < playerItems.size(); i++, labelPosition++)
 	{
-		if (labelPosition == playerLabels.size())
+		if (labelPosition == playerItems.size())
 		{
 			labelPosition = 0;
 		}
 
 		const float PI = static_cast<float>(std::atan(1)) * 4;
 		float xRadius = this->data.window.getSize().x / 2.5f;
-		float yRadius = this->data.window.getSize().y / 2.5f;
-		float theta = (2 * PI * i) / this->playerLabels.size() + (PI / 2);
-		this->playerLabels.at(labelPosition).second->SetPosition(sf::Vector2f(std::round(xRadius * std::cos(theta)) + this->data.window.getSize().x / 2.2f, std::round(yRadius * std::sin(theta)) + this->data.window.getSize().y / 2.3f));
+		float yRadius = this->data.window.getSize().y / 2.9f;
+		float theta = (2 * PI * i) / this->playerItems.size() + (PI / 2);
+		this->playerItems.at(labelPosition).label->SetPosition(sf::Vector2f(std::round(xRadius * std::cos(theta)) + this->data.window.getSize().x / 2.2f, std::round(yRadius * std::sin(theta)) + this->data.window.getSize().y / 2.f));
 	}
 }
 
@@ -228,34 +233,44 @@ void PlayState::adjustBetEntry()
 	this->betEntry->SetText(std::to_string(static_cast<std::size_t>(this->betAdjustment->GetValue() / (this->betAdjustment->GetUpper() - this->betAdjustment->GetPageSize()) * this->dealer.getPokerTable().getPlayer(this->mainPlayerName).getStack())));
 }
 
-void PlayState::updatePlayerLabels()
+void PlayState::updatePlayerItems()
 {
 	const auto& players = this->dealer.getPokerTable().getPlayers();
 
-	for (auto& playerLabel : this->playerLabels)
+	for (auto& playerItem : this->playerItems)
 	{
 		auto player = std::find_if(players.begin(), players.end(),
-			[&](const Player& player) { return player.getName() == playerLabel.first; });
+			[&](const Player& player) { return player.getName() == playerItem.name; });
 
 		if (player != players.end())
 		{
-			playerLabel.second->SetText(player->toString());
+			playerItem.label->SetText(player->toString());
 		}
 		else
 		{
-			playerLabel.second->Show(false);
+			playerItem.label->Show(false);
 		}
 	}
 }
 
 void PlayState::updatePotLabel()
 {
-	potLabel->SetText("| Pot: " + std::to_string(this->dealer.getPokerTable().getPot()) + " | Call Amount: " + std::to_string(this->dealer.maxContribution() - this->dealer.getPokerTable().getPlayer(this->mainPlayerName).getPotContribution()) + " |");
+	const auto& pokerTable = this->dealer.getPokerTable();
+	std::string callAmount = "";
+
+	if (pokerTable.findPlayer(this->mainPlayerName) < pokerTable.getSize())
+	{
+		callAmount = "Call Amount: " + std::to_string(this->dealer.maxContribution() - this->dealer.getPokerTable().getPlayer(this->mainPlayerName).getPotContribution()) + " |";
+	}
+
+	potLabel->SetText("| Pot: " + std::to_string(this->dealer.getPokerTable().getPot()) + " | " + callAmount);
 }
 
 void PlayState::assignCardTextures()
 {
 	const auto& cards = Deck().CardContainer::getCards();
+
+	this->data.textures.loadTexture("CardBack", "CardBack.png");
 
 	for (std::size_t i = 1; i <= 52; i++)
 	{
@@ -267,9 +282,22 @@ void PlayState::assignCardTextures()
 		}
 
 		sf::Sprite cardSprite(this->data.textures.getTexture(card));
-		cardSprite.setScale(0.28f, 0.3f);
+		cardSprite.setScale(0.26f, 0.28f);
 
 		this->cardSprites.insert(std::make_pair(card, cardSprite));
+	}
+
+	for (std::size_t i = 0; i < this->playerItems.size(); i++)
+	{
+		for (std::size_t j = 0; j < this->dealer.getPokerTable().getPlayer(this->mainPlayerName).getHoleCards().getSize(); j++)
+		{
+			sf::Sprite backCardSprite(this->data.textures.getTexture("CardBack"));
+			const std::size_t xOffset = static_cast<std::size_t>(j * this->data.window.getSize().x / 18.f);
+
+			backCardSprite.setScale(0.12f, 0.15f);
+			backCardSprite.setPosition(sf::Vector2f(this->playerItems.at(i).label->GetAbsolutePosition().x + xOffset, playerItems.at(i).label->GetAbsolutePosition().y - (this->data.window.getSize().y / 8.f)));
+			playerItems.at(i).hiddenHoleCards.push_back(backCardSprite);
+		}
 	}
 }
 
@@ -281,24 +309,41 @@ void PlayState::drawCommunityCards()
 
 		for (std::size_t i = 0; i < communityCards.size(); i++)
 		{
-			std::size_t xOffset = static_cast<std::size_t>(i * (this->data.window.getSize().x / 10.f));
+			const std::size_t xOffset = static_cast<std::size_t>(i * (this->data.window.getSize().x / 10.f));
 			this->cardSprites.at(communityCards.at(i).toString()).setPosition(sf::Vector2f((this->data.window.getSize().x / 3.6f) + xOffset, this->data.window.getSize().y / 3.f));
 			this->data.window.draw(this->cardSprites.at(communityCards.at(i).toString()));
 		}
 	}
 }
 
-void PlayState::drawHoleCards(const std::string& playerName)
+void PlayState::drawHoleCards()
 {
-	const auto& playerLabel = std::find_if(this->playerLabels.begin(), this->playerLabels.end(),
-		[&](const std::pair<std::string, sfg::Label::Ptr> playerLabel) { return playerLabel.first == playerName; });
+	const auto& pokerTable = this->dealer.getPokerTable();
+	const auto& players = pokerTable.getPlayers();
 
-	const auto& holeCards = this->dealer.getPokerTable().getPlayer(playerName).getHoleCards().getCards();
-
-	for (std::size_t i = 0; i < holeCards.size(); i++)
+	for (std::size_t i = 0; i < this->playerItems.size(); i++)
 	{
-		std::size_t xOffset = static_cast<std::size_t>(i * this->data.window.getSize().x / 12.f);
-		this->cardSprites.at(holeCards.at(i).toString()).setPosition(sf::Vector2f(playerLabel->second->GetAbsolutePosition().x + xOffset, playerLabel->second->GetAbsolutePosition().y - (this->data.window.getSize().y / 5.f)));
-		this->data.window.draw(this->cardSprites.at(holeCards.at(i).toString()));
+		const auto& player = std::find_if(players.begin(), players.end(),
+			[&](const Player& player) { return player.getName() == this->playerItems.at(i).name; });
+
+		if (player != players.end())
+		{
+			for (std::size_t j = 0; j < player->getHoleCards().getSize(); j++)
+			{
+				const std::size_t xOffset = static_cast<std::size_t>(j * this->data.window.getSize().x / 12.f);
+				const auto& cardPosition = sf::Vector2f(this->playerItems.at(i).label->GetAbsolutePosition().x + xOffset, playerItems.at(i).label->GetAbsolutePosition().y - (this->data.window.getSize().y / 5.f));
+
+				if (this->playerItems.at(i).name == this->mainPlayerName)
+				{
+					const auto& mainPlayerHoleCards = pokerTable.getPlayer(this->mainPlayerName).getHoleCards().getCards();
+					this->cardSprites.at(mainPlayerHoleCards.at(j).toString()).setPosition(cardPosition);
+					this->data.window.draw(this->cardSprites.at(mainPlayerHoleCards.at(j).toString()));
+				}
+				else 
+				{
+					this->data.window.draw(this->playerItems.at(i).hiddenHoleCards.at(j));
+				}
+			}
+		}
 	}
 }

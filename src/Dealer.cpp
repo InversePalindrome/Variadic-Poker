@@ -132,7 +132,6 @@ void Dealer::makeFold(std::size_t playerPosition)
 
 	this->pokerTable.players.at(playerPosition).setAction(Player::Fold);
 	this->pokerTable.players.at(playerPosition).clearHoleCards();
-	this->actionCount++;
 }
 
 void Dealer::makeCall(std::size_t playerPosition)
@@ -343,7 +342,7 @@ void Dealer::transferPotToWinner()
 		{
 			if (player.isActive() && player.getPotContribution() == 0)
 			{
-				this->makeFold(this->pokerTable.findPlayer(player));
+				this->makeFold(this->pokerTable.findPlayer(player.getName()));
 			}
 		}
 
@@ -356,7 +355,7 @@ void Dealer::transferPotToWinner()
 		auto lastPlayer = std::find_if(this->pokerTable.players.begin(), this->pokerTable.players.end(),
 			[&](const Player& player) { return player.getPotContribution() > 0; });
 
-		this->makeFold(this->pokerTable.findPlayer(*lastPlayer));
+		this->makeFold(this->pokerTable.findPlayer(lastPlayer->getName()));
 		lastPlayer->addToStack(lastPlayer->getPotContribution());
 		lastPlayer->clearPotContribution();
 	}

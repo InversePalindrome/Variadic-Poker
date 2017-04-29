@@ -87,19 +87,19 @@ void PokerTable::addToPot(std::size_t chips)
 	this->pot += chips;
 }
 
-void PokerTable::addChipsToPlayer(const Player& player, std::size_t chips)
+void PokerTable::addChipsToPlayer(const std::string& playerName, std::size_t chips)
 {
-	this->players.at(findPlayer(player)).addToStack(chips);
+	this->players.at(this->findPlayer(playerName)).addToStack(chips);
 }
 
-void PokerTable::removePlayer(const Player& player)
+void PokerTable::removePlayer(const std::string& playerName)
 {
-	this->players.erase(std::remove(this->players.begin(), this->players.end(), player), this->players.end());
+	this->players.erase(this->players.begin() + this->findPlayer(playerName));
 }
 
-void PokerTable::removeChipsFromPlayer(const Player& player, std::size_t chips)
+void PokerTable::removeChipsFromPlayer(const std::string& playerName, std::size_t chips)
 {
-	this->players.at(findPlayer(player)).removeFromStack(chips);
+	this->players.at(this->findPlayer(playerName)).removeFromStack(chips);
 }
 
 void PokerTable::insertPlayer(const Player& player, std::size_t playerPosition)
@@ -117,9 +117,10 @@ void PokerTable::clearPot()
 	this->pot = 0;
 }
 
-std::size_t PokerTable::findPlayer(const Player& player) const
+std::size_t PokerTable::findPlayer(const std::string& playerName) const
 {
-	return std::distance(this->players.begin(), std::find(this->players.begin(), this->players.end(), player));
+	return std::distance(this->players.begin(), std::find_if(this->players.begin(), this->players.end(), 
+		[&](const Player& player2) { return playerName == player2.getName(); }));
 }
 
 std::size_t PokerTable::activePlayerCount() const

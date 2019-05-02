@@ -14,29 +14,29 @@ InversePalindrome.com
 class CardContainer
 {
 public:
-	CardContainer();
-	CardContainer(const std::vector<Card>& cards);
+    CardContainer();
+    CardContainer(const std::vector<Card>& cards);
 
-	std::vector<Card> getCards() const;
-	std::size_t getSize() const;
+    std::vector<Card> getCards() const;
+    std::size_t getSize() const;
 
-	void setCards(const std::vector<Card>& cards);
+    void setCards(const std::vector<Card>& cards);
 
-	void addCard(const Card& card);
-	void addCards(const std::vector<Card>& cards);
+    void addCard(const Card& card);
+    void addCards(const std::vector<Card>& cards);
 
-	void removeCard(const Card& card);
-	void removeCards(const std::vector<Card>& cards);
-	void removeCards(std::size_t numOfCards);
+    void removeCard(const Card& card);
+    void removeCards(const std::vector<Card>& cards);
+    void removeCards(std::size_t numOfCards);
 
-	void clearCards();
+    void clearCards();
 
-	void sort();
+    void sort();
 
-	bool hasCards() const;
+    bool hasCards() const;
 
-	virtual std::string toString() const;
+    virtual std::string toString() const;
 
 protected:
-	std::vector<Card> cards;
+    std::vector<Card> cards;
 };

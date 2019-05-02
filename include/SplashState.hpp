@@ -18,13 +18,13 @@ class StateStack;
 class SplashState : public GameState
 {
 public:
-	SplashState(StateStack& states, Data& data);
+    SplashState(StateStack& states, Data& data);
 
-	virtual void processEvent() override;
-	virtual void update(sf::Time deltaTime) override;
-	virtual void draw() override;
+    virtual void processEvent() override;
+    virtual void update(sf::Time deltaTime) override;
+    virtual void draw() override;
 
 private:
-	sf::Sprite background;
-	sf::Clock timer;
+    sf::Sprite background;
+    sf::Clock timer;
 };

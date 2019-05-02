@@ -11,41 +11,41 @@ InversePalindrome.com
 
 
 Deck::Deck() :
-	CardContainer()
+    CardContainer()
 {
-	for (int suit = Card::Spade; suit <= Card::Heart; suit++)
-	{
-		for (int rank = Card::Two; rank <= Card::Ace; rank++)
-		{
-			addCard(Card(static_cast<Card::Suit>(suit), static_cast<Card::Rank>(rank)));
-		}
-	}
+    for (int suit = Card::Spade; suit <= Card::Heart; suit++)
+    {
+        for (int rank = Card::Two; rank <= Card::Ace; rank++)
+        {
+            addCard(Card(static_cast<Card::Suit>(suit), static_cast<Card::Rank>(rank)));
+        }
+    }
 }
 
 Deck::Deck(const std::vector<Card>& deck) :
-	CardContainer(deck)
+    CardContainer(deck)
 {
 }
 
 std::vector<Card> Deck::getCards(std::size_t numOfCards) const
 {
-	if (numOfCards > 0 && numOfCards <= this->getSize())
-	{
-		return std::vector<Card>(this->cards.end() - numOfCards, this->cards.end());
-	}
+    if (numOfCards > 0 && numOfCards <= this->getSize())
+    {
+        return std::vector<Card>(this->cards.end() - numOfCards, this->cards.end());
+    }
 
-	return{};
+    return{};
 }
 
 Card Deck::getCard() const
 {
-	return this->cards.back();
+    return this->cards.back();
 }
 
 void Deck::shuffle()
 {
-	std::random_device rd;
-	std::mt19937 mt(rd());
+    std::random_device rd;
+    std::mt19937 mt(rd());
 
-	std::shuffle(this->cards.begin(), this->cards.end(), mt);
+    std::shuffle(this->cards.begin(), this->cards.end(), mt);
 }

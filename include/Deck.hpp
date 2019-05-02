@@ -14,11 +14,11 @@ InversePalindrome.com
 class Deck : public CardContainer
 {
 public:
-	Deck();
-	Deck(const std::vector<Card>& deck);
+    Deck();
+    Deck(const std::vector<Card>& deck);
 
-	std::vector<Card> getCards(std::size_t numOfCards) const;
-	Card getCard() const;
+    std::vector<Card> getCards(std::size_t numOfCards) const;
+    Card getCard() const;
 
-	void shuffle();
+    void shuffle();
 };

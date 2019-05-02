@@ -18,46 +18,46 @@ InversePalindrome.com
 class StateStack
 {
 public:
-	enum StateID { UndefinedState, SplashState, MenuState, GameSelectState, PlayState };
-	enum StackAction { UndefinedAction, Pop, Push, Clear };
+    enum StateID { UndefinedState, SplashState, MenuState, GameSelectState, PlayState };
+    enum StackAction { UndefinedAction, Pop, Push, Clear };
 
-	StateStack();
+    StateStack();
 
-	void processEvent();
-	void update(sf::Time deltaTime);
-	void draw();
+    void processEvent();
+    void update(sf::Time deltaTime);
+    void draw();
 
-	template<typename T>
-	void registerState(StateID stateName, StateStack& states, GameState::Data& data);
+    template<typename T>
+    void registerState(StateID stateName, StateStack& states, GameState::Data& data);
 
-	void pushState(StateID stateName);
+    void pushState(StateID stateName);
 
-	void popState();
+    void popState();
 
-	void clearStates();
+    void clearStates();
 
-	bool hasStates() const;
+    bool hasStates() const;
 
 private:
-	struct PendingAction
-	{
-		PendingAction(StackAction stackAction, StateID stateID);
+    struct PendingAction
+    {
+        PendingAction(StackAction stackAction, StateID stateID);
 
-		StackAction stackAction;
-		StateID stateID;
-	};
+        StackAction stackAction;
+        StateID stateID;
+    };
 
-	std::vector<std::unique_ptr<GameState>> states;
-	std::vector<PendingAction> pendingActions;
-	std::map<StateID, std::function<std::unique_ptr<GameState>()>> stateMap;
+    std::vector<std::unique_ptr<GameState>> states;
+    std::vector<PendingAction> pendingActions;
+    std::map<StateID, std::function<std::unique_ptr<GameState>()>> stateMap;
 
-	std::unique_ptr<GameState> selectState(StateID stateName);
-	void applyPendingState();
+    std::unique_ptr<GameState> selectState(StateID stateName);
+    void applyPendingState();
 };
 
 
 template<typename T>
 void StateStack::registerState(StateID stateName, StateStack& states, GameState::Data& data)
 {
-	this->stateMap[stateName] = [&]() { return std::unique_ptr<GameState>(new T(states, data)); };
+    this->stateMap[stateName] = [&]() { return std::unique_ptr<GameState>(new T(states, data)); };
 }

@@ -12,31 +12,31 @@ InversePalindrome.com
 class Card
 {
 public:
-	enum Suit { UndefinedSuit, Spade, Club, Diamond, Heart };
-	enum Rank { UndefinedRank, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace };
+    enum Suit { UndefinedSuit, Spade, Club, Diamond, Heart };
+    enum Rank { UndefinedRank, Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace };
 
-	static const std::size_t SUIT_LENGTH = 4;
-	static const std::size_t RANK_LENGTH = 13;
+    static const std::size_t SUIT_LENGTH = 4;
+    static const std::size_t RANK_LENGTH = 13;
 
-	Card();
-	Card(Suit suit, Rank rank);
+    Card();
+    Card(Suit suit, Rank rank);
 
-	Suit getSuit() const;
-	Rank getRank() const;
+    Suit getSuit() const;
+    Rank getRank() const;
 
-	void setSuit(Suit suit);
-	void setRank(Rank rank);
+    void setSuit(Suit suit);
+    void setRank(Rank rank);
 
-	std::string toString() const;
+    std::string toString() const;
 
-	bool operator==(const Card& otherCard) const;
-	bool operator!=(const Card& otherCard) const;
-	bool operator<(const Card& otherCard) const;
-	bool operator>(const Card& otherCard) const;
-	bool operator<=(const Card& otherCard) const;
-	bool operator>=(const Card& otherCard) const;
+    bool operator==(const Card& otherCard) const;
+    bool operator!=(const Card& otherCard) const;
+    bool operator<(const Card& otherCard) const;
+    bool operator>(const Card& otherCard) const;
+    bool operator<=(const Card& otherCard) const;
+    bool operator>=(const Card& otherCard) const;
 
 private:
-	Suit suit;
-	Rank rank;
+    Suit suit;
+    Rank rank;
 };

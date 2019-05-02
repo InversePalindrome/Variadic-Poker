@@ -13,16 +13,16 @@ InversePalindrome.com
 class PokerAI
 {
 public:
-	PokerAI(Dealer& dealer);
+    PokerAI(Dealer& dealer);
 
-	void executeAction(std::size_t playerPosition);
+    void executeAction(std::size_t playerPosition);
 
 private:
-	Dealer& dealer ;
+    Dealer& dealer;
 
-	double calculateRateOfReturn(std::size_t playerPosition) const;
-	double calculatePotOdds(std::size_t playerPosition) const;
-	double calculateHandStrength(std::size_t playerPosition) const;
+    double calculateRateOfReturn(std::size_t playerPosition) const;
+    double calculatePotOdds(std::size_t playerPosition) const;
+    double calculateHandStrength(std::size_t playerPosition) const;
 
-	void selectAction(std::size_t playerPositionn, Player::Action playerAction);
+    void selectAction(std::size_t playerPositionn, Player::Action playerAction);
 };

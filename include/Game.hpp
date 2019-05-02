@@ -16,14 +16,14 @@ InversePalindrome.com
 class Game
 {
 public:
-	Game();
-	void run();
+    Game();
+    void run();
 
 private:
-	StateStack states;
-	GameState::Data data;
-	sf::RenderWindow window;
-	sfg::SFGUI sfgui;
-	TextureManager textures;
-	PokerTable pokerTable;
+    StateStack states;
+    GameState::Data data;
+    sf::RenderWindow window;
+    sfg::SFGUI sfgui;
+    TextureManager textures;
+    PokerTable pokerTable;
 };

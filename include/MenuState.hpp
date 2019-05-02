@@ -19,15 +19,15 @@ class StateStack;
 class MenuState : public GameState
 {
 public:
-	MenuState(StateStack& states, Data& data);
+    MenuState(StateStack& states, Data& data);
 
-	virtual void processEvent() override;
-	virtual void update(sf::Time deltaTime) override;
-	virtual void draw() override;
+    virtual void processEvent() override;
+    virtual void update(sf::Time deltaTime) override;
+    virtual void draw() override;
 
 private:
-	sf::Sprite background;
-	sfg::Button::Ptr playButton;
+    sf::Sprite background;
+    sfg::Button::Ptr playButton;
 
-	void transitionToGameSelect();
+    void transitionToGameSelect();
 };

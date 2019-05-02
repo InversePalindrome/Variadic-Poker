@@ -14,12 +14,12 @@ InversePalindrome.com
 class TextureManager
 {
 public:
-	sf::Texture& getTexture(const std::string& name);
+    sf::Texture& getTexture(const std::string& name);
 
-	void loadTexture(const std::string& name, const std::string& fileName);
+    void loadTexture(const std::string& name, const std::string& fileName);
 
-	bool hasTexture(const std::string& name) const;
+    bool hasTexture(const std::string& name) const;
 
 private:
-	std::unordered_map<std::string, sf::Texture> textures;
+    std::unordered_map<std::string, sf::Texture> textures;
 };

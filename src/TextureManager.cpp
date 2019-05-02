@@ -8,21 +8,21 @@ InversePalindrome.com
 #include "TextureManager.hpp" 
 
 
-sf::Texture& TextureManager::getTexture(const std::string& name) 
+sf::Texture& TextureManager::getTexture(const std::string& name)
 {
-	return this->textures.at(name);
+    return this->textures.at(name);
 }
 
 void TextureManager::loadTexture(const std::string& name, const std::string& fileName)
 {
-	sf::Texture texture;
+    sf::Texture texture;
 
-	texture.loadFromFile(fileName);
+    texture.loadFromFile(fileName);
 
-	this->textures[name] = texture;
+    this->textures[name] = texture;
 }
 
 bool TextureManager::hasTexture(const std::string& name) const
 {
-	return this->textures.count(name) > 0;
+    return this->textures.count(name) > 0;
 }

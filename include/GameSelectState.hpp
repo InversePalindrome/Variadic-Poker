@@ -23,31 +23,31 @@ class StateStack;
 class GameSelectState : public GameState
 {
 public:
-	GameSelectState(StateStack& states, Data& data);
+    GameSelectState(StateStack& states, Data& data);
 
-	virtual void processEvent() override;
-	virtual void update(sf::Time deltaTime) override;
-	virtual void draw() override;
+    virtual void processEvent() override;
+    virtual void update(sf::Time deltaTime) override;
+    virtual void draw() override;
 
 private:
-	sf::Sprite background;
-	sfg::Window::Ptr selectionWindow;
-	sfg::Box::Ptr selectionFrame;
-	sfg::ComboBox::Ptr tableSizeOptions;
-	sfg::Button::Ptr menuButton;
-	sfg::Button::Ptr doneButton;
-	sfg::Entry::Ptr playerNameEntry;
-	sfg::Entry::Ptr bigBlindEntry;
-	sfg::Entry::Ptr anteEntry;
-	sfg::Entry::Ptr playerStackEntry;
-	sfg::Label::Ptr playerNameLabel;
-	sfg::Label::Ptr tableSizeLabel;
-	sfg::Label::Ptr bigBlindLabel;
-	sfg::Label::Ptr anteLabel;
-	sfg::Label::Ptr playerStackLabel;
+    sf::Sprite background;
+    sfg::Window::Ptr selectionWindow;
+    sfg::Box::Ptr selectionFrame;
+    sfg::ComboBox::Ptr tableSizeOptions;
+    sfg::Button::Ptr menuButton;
+    sfg::Button::Ptr doneButton;
+    sfg::Entry::Ptr playerNameEntry;
+    sfg::Entry::Ptr bigBlindEntry;
+    sfg::Entry::Ptr anteEntry;
+    sfg::Entry::Ptr playerStackEntry;
+    sfg::Label::Ptr playerNameLabel;
+    sfg::Label::Ptr tableSizeLabel;
+    sfg::Label::Ptr bigBlindLabel;
+    sfg::Label::Ptr anteLabel;
+    sfg::Label::Ptr playerStackLabel;
 
-	void transitionToMenu();
-	void transitionToPlay();
+    void transitionToMenu();
+    void transitionToPlay();
 
-	void setPokerTable(const std::string& playerName, std::size_t tableSize, std::size_t bigBlind, std::size_t ante, std::size_t startingStack);
+    void setPokerTable(const std::string& playerName, std::size_t tableSize, std::size_t bigBlind, std::size_t ante, std::size_t startingStack);
 };

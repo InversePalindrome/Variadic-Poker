@@ -8,9 +8,9 @@ InversePalindrome.com
 #include "Game.hpp"
 
 
-int main() 
+int main()
 {
-	Game game;
+    Game game;
 
-	game.run();
-} 
+    game.run();
+}
